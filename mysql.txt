@@ -1,0 +1,71 @@
+
+
+create database testdb;
+
+use testdb;
+
+
+drop table item;
+create table item (code varchar(10), name varchar(100), target varchar(1), opt varchar(1), primary key (code));
+
+insert into item (code, name, target, option) 
+select * from (select '0001', 'xxxx', 'x', 'x') as tmp 
+where not exists (select code from item where code = '0001');
+
+
+drop table day;
+create table day (code varchar(10), no int, date int, start_price int, end_price int, high_price int, low_price int, volumn int, avg_5 int, avg_20 int, avg_120 int, constraint pk_day primary key (code, date));
+alter table day add index day_no(code, no);
+
+
+insert into day (code, no, date, end_price) 
+select * from (select '0001', (select ifnull(max(no),0)+1 from day where code = '0001'), 190801, 1000) as tmp 
+where not exists (select date from day where code = '0001' and date = 190801);
+
+insert into day (code, no, date, end_price) 
+select * from (select '0001', (select ifnull(max(no),0)+1 from day where code = '0001'), 190802, 2000) as tmp 
+where not exists (select date from day where code = '0001' and date = 190802);
+
+insert into day (code, no, date, end_price) 
+select * from (select '0001', (select ifnull(max(no),0)+1 from day where code = '0001'), 190803, 3000) as tmp 
+where not exists (select date from day where code = '0001' and date = 190803);
+
+insert into day (code, no, date, end_price) 
+select * from (select '0001', (select ifnull(max(no),0)+1 from day where code = '0001'), 190804, 4000) as tmp 
+where not exists (select date from day where code = '0001' and date = 190804);
+
+insert into day (code, no, date, end_price) 
+select * from (select '0001', (select ifnull(max(no),0)+1 from day where code = '0001'), 190805, 5000) as tmp 
+where not exists (select date from day where code = '0001' and date = 190805);
+
+insert into day (code, no, date, end_price) 
+select * from (select '0001', (select ifnull(max(no),0)+1 from day where code = '0001'), 190806, 6000) as tmp 
+where not exists (select date from day where code = '0001' and date = 190806);
+
+insert into day (code, no, date, end_price) 
+select * from (select '0001', (select ifnull(max(no),0)+1 from day where code = '0001'), 190807, 7000) as tmp 
+where not exists (select date from day where code = '0001' and date = 190807);
+
+
+drop table evaluate;
+create table evaluate (seq int not null auto_increment, date varchar(10), test_condition varchar(300), check_total int, check_matched int, winning_rate numeric, primary key (seq));
+
+drop table evaluate_detail;
+create table evaluate_detail (seq int, code varchar(10), name varchar(100), date varchar(10), buy_time int, sell_time int, buy_price int, sell_price int, profit_rate numeric, primary key (seq, code, date, buy_time));
+
+
+--------------- avg_5
+
+update day as d1
+join (
+select code, round(avg(end_price)) as avg_5
+from day
+where code = '0001'
+and no between 1 and 5
+) d2 on d1.code = d2.code
+set d1.avg_5 = d2.avg_5
+where d1.no = 5;
+
+
+
+
