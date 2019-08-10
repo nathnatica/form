@@ -47,6 +47,13 @@ select * from (select '0001', (select ifnull(max(no),0)+1 from day where code = 
 where not exists (select date from day where code = '0001' and date = 190807);
 
 
+drop table three;
+create table three (code varchar(10), date int, time int, start_price int, end_price int, high_price int, low_price int, volumn int, avg_5 int, avg_20 int, avg_120 int, constraint pk_day primary key (code, date, time));
+
+
+
+
+
 drop table evaluate;
 create table evaluate (seq int not null auto_increment, date varchar(10), test_condition varchar(300), check_total int, check_matched int, winning_rate numeric, primary key (seq));
 
