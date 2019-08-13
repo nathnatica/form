@@ -1,0 +1,233 @@
+
+
+git install
+https://git-scm.com/download/win
+
+
+visual studio community 2019
+https://visualstudio.microsoft.com/vs/
+
+
+ms visual c++ 2015
+Download Microsoft Visual C++ Redistributable (All Versions) - iTechtics
+https://www.microsoft.com/en-pk/download/details.aspx?id=48145
+
+
+mysql
+https://dev.mysql.com/downloads/windows/installer/8.0.html
+mysql-installer-community-8.0.17.0.msi
+
+https://dev.mysql.com/downloads/windows/visualstudio/
+mysql-for-visualstudio-1.2.8.msi
+
+
+mysql install
+port 3306
+root / qkrtjdgh
+
+
+visual studio setting
+ create new project with windows form application
+ need to install module 
+ and language pack(if needed)
+ created at C:\Users\me\source\repos\
+ 
+ add datasource
+	ServerExplorer > DataConnections > Add Connection
+	ServerName : localhost
+	Database name : created db name
+
+ add MySql.Data, MySql.Data.Entity
+	Solution Explorer > Manage Nuget Packages
+ reference
+ https://weblion303.net/689/
+
+
+MySQL WorkBench
+ create new schema
+ charset utf-8? or default?
+
+
+---------------
+자몽로그
+https://blog.naver.com/rkdwnsdud555/220813816179
+
+
+키움 오픈 API를 이용한 분석 프로그램
+https://wd501.tistory.com/39
+
+
+https://dennisbot.tistory.com/16?category=637468
+
+--------------- insert
+
+    using MySql.Data.MySqlClient;  //Its for MySQL  
+	
+    private void button1_Click(object sender, EventArgs e)  
+    {  
+        try  
+       {  
+                //This is my connection string i have assigned the database file address path  
+                string MyConnection2 = "datasource=localhost;port=3306;username=root;password=root";  
+                //This is my insert query in which i am taking input from the user through windows forms  
+                string Query = "insert into student.studentinfo(idStudentInfo,Name,Father_Name,Age,Semester) values('" +this.IdTextBox.Text+ "','" +this.NameTextBox.Text+ "','" +this.FnameTextBox.Text+ "','" +this.AgeTextBox.Text+ "','" +this.SemesterTextBox.Text+ "');";  
+                //This is  MySqlConnection here i have created the object and pass my connection string.  
+                MySqlConnection MyConn2 = new MySqlConnection(MyConnection2);  
+                //This is command class which will handle the query and connection object.  
+                MySqlCommand MyCommand2 = new MySqlCommand(Query, MyConn2);  
+                MySqlDataReader MyReader2;  
+                MyConn2.Open();  
+                MyReader2 = MyCommand2.ExecuteReader();     // Here our query will be executed and data saved into the database.  
+                MessageBox.Show("Save Data");  
+                while (MyReader2.Read())  
+                {                     
+                }  
+                MyConn2.Close();  
+            }  
+            catch (Exception ex)  
+            {   
+                MessageBox.Show(ex.Message);  
+          }  
+    }  
+
+---------------- update
+
+    private void button2_Click(object sender, EventArgs e)  
+    {  
+        try  
+        {  
+            //This is my connection string i have assigned the database file address path  
+            string MyConnection2 = "datasource=localhost;port=3307;username=root;password=root";  
+            //This is my update query in which i am taking input from the user through windows forms and update the record.  
+            string Query = "update student.studentinfo set idStudentInfo='" + this.IdTextBox.Text + "',Name='" + this.NameTextBox.Text + "',Father_Name='" + this.FnameTextBox.Text + "',Age='" + this.AgeTextBox.Text + "',Semester='" + this.SemesterTextBox.Text + "' where idStudentInfo='" + this.IdTextBox.Text + "';";  
+            //This is  MySqlConnection here i have created the object and pass my connection string.  
+            MySqlConnection MyConn2 = new MySqlConnection(MyConnection2);  
+            MySqlCommand MyCommand2 = new MySqlCommand(Query, MyConn2);  
+            MySqlDataReader MyReader2;  
+            MyConn2.Open();  
+            MyReader2 = MyCommand2.ExecuteReader();  
+            MessageBox.Show("Data Updated");  
+            while (MyReader2.Read())  
+            {  
+            }  
+            MyConn2.Close();//Connection closed here  
+        }  
+        catch (Exception ex)  
+        {   
+            MessageBox.Show(ex.Message);  
+        }  
+    }  
+
+-------------- delete
+
+    private void button3_Click(object sender, EventArgs e)  
+    {  
+        try  
+        {  
+            string MyConnection2 = "datasource=localhost;port=3307;username=root;password=root";  
+            string Query = "delete from student.studentinfo where idStudentInfo='" + this.IdTextBox.Text + "';";  
+            MySqlConnection MyConn2 = new MySqlConnection(MyConnection2);  
+            MySqlCommand MyCommand2 = new MySqlCommand(Query, MyConn2);  
+            MySqlDataReader MyReader2;  
+            MyConn2.Open();  
+             MyReader2 = MyCommand2.ExecuteReader();  
+             MessageBox.Show("Data Deleted");  
+             while (MyReader2.Read())  
+             {  
+             }  
+             MyConn2.Close();  
+        }  
+        catch (Exception ex)  
+        {  
+            MessageBox.Show(ex.Message);  
+        }  
+    }  
+
+-------------- display
+
+    private void button4_Click(object sender, EventArgs e)  
+    {  
+        try  
+        {  
+            string MyConnection2 = "datasource=localhost;port=3307;username=root;password=root";
+            //Display query
+            string Query = "select * from student.studentinfo;";
+            MySqlConnection MyConn2 = new MySqlConnection(MyConnection2);
+            MySqlCommand MyCommand2 = new MySqlCommand(Query, MyConn2);
+            //  MyConn2.Open();
+           //For offline connection we weill use  MySqlDataAdapter class.
+           MySqlDataAdapter MyAdapter = new MySqlDataAdapter();
+           MyAdapter.SelectCommand = MyCommand2;
+           DataTable dTable = new DataTable();
+           MyAdapter.Fill(dTable);  
+           dataGridView1.DataSource = dTable; // here i have assign dTable object to the dataGridView1 object to display data.               
+            // MyConn2.Close();  
+       }  
+      catch (Exception ex)  
+      {   
+            MessageBox.Show(ex.Message);  
+       }  
+    }  
+
+---------------- preparedstatement
+
+	cmd = new MySqlCommand("select * from a where a=@val1 and b=@val2", MyConn2);
+	cmd.Parameters.AddWithValue("@val1", tboxUserName.Text);
+	cmd.Parameters.AddWithValue("@val2", tboxPW.Text);
+
+--------------------
+3min
+
+9	10	11	12	13	14	15	|9	10	11	12	13	14	15
+20	20	20	20	20	20	10	|20	20	20	20	20	20	10
+
+
+130 + 130 = 260
+
+--------------------
+
+신규데이터부터 받으므로(최신 데이터는 미완료일수도...)
+array의 가장 뒤 부터 data를 등록하고 이미 등록된 레코드의 최신 버전은 갱신한다(미완료의 가능성이 있으므로)
+다시 array의 앞에서부터(갱신,등록) 이평 데이터를 계산해서 넣어준다.
+
+--------------------
+
+주어진 기간에 한해서 일봉데이터를 앞에서부터 하루씩 체크
+해당 일로부터 n일전에 n프로의 장대 양봉이 있었는지
+그 장대 양봉은 다시 그 바로 전 일의 거래량의 n배 이상인지
+장대 양봉 발생 후 모든 봉이 장대 양봉의 n보다 가격이 떨어진 적이 없는지
+5이평 20이평 120이평의 차이 확인
+수렴하는 것 어떻게 수렴하는지...
+작은 양봉 혹은 음봉
+
+
+장대 양봉 후 바로 그 다음날 갭 음봉이나 
+거래량 줄어들고 장대 양봉을 훼손하지 않는 음봉일 경우
+
+-> 매치 될 경우 바로 그 다음날 어떻게 되는지를 확인
+
+
+-------------------
+
+ Random rnd = new Random();
+ int month = rnd.Next(1, 13); // 1 - 12
+ int card = rnd.(52); // 0 - 51
+
+-------------------
+ 
+ string[] lines = File.ReadAllLines("C:\\input.txt");
+ foreach (string line in lines) {
+	string[] sp = line.Split(",");
+
+ }
+ 
+-------------------
+ 
+ String.IsNullOrEmpty();
+ 
+ 
+ 
+ 
+ 
+ 
+ 
