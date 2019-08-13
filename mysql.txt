@@ -55,7 +55,7 @@ create table three (code varchar(10), date int, time int, start_price int, end_p
 
 
 drop table evaluate;
-create table evaluate (seq int not null auto_increment, date varchar(10), test_condition varchar(300), check_total int, check_matched int, winning_rate numeric, primary key (seq));
+create table evaluate (seq int, date varchar(10), test_condition varchar(300), check_total int, check_matched int, winning_rate numeric, primary key (seq));
 
 drop table evaluate_detail;
 create table evaluate_detail (seq int, code varchar(10), name varchar(100), date varchar(10), buy_time int, sell_time int, buy_price int, sell_price int, profit_rate numeric, primary key (seq, code, date, buy_time));
