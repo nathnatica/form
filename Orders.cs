@@ -36,7 +36,13 @@ namespace WindowsFormsApp1
 
         public float GetWinningRate()
         {
-            return winCount / (winCount + loseCount) * 100;
+            if (winCount + loseCount > 0)
+            {
+                return winCount / (winCount + loseCount) * 100;
+            } else
+            {
+                return 0;
+            }
         }
 
         public float GetTotalProfitRate()
@@ -61,9 +67,9 @@ namespace WindowsFormsApp1
         public string GetSummary()
         {
             return "==========================\n" +
-                "MATCHED : " + (winCount + loseCount) + "/" + checkTotal + " (" + GetMatchRate() + ")\n" +
-                "WIN  : " + winCount + ", LOSE : " + loseCount + " (" + GetWinningRate() + ")\n" +
-                "TOTAL PROFIT : " + GetTotalProfitRate();
+                "MATCHED : " + (winCount + loseCount) + "/" + checkTotal + " (" + GetMatchRate() + "%)\n" +
+                "WIN  : " + winCount + ", LOSE : " + loseCount + " (" + GetWinningRate() + "%)\n" +
+                "TOTAL PROFIT : " + GetTotalProfitRate() + "%";
         }
 
     }

@@ -41,42 +41,44 @@ namespace WindowsFormsApp1
             float profitCut = 3;
             float profitCutPrice = order.buyPrice + (order.buyPrice * profitCut / 100);
 
-            if (lossCutPrice >= data.array[checkIdx].endprice)
+            if (data.array[checkIdx] != null)
             {
-                order.status = "F";
-                order.sellDate = data.array[checkIdx].date;
-                order.sellTime = data.array[checkIdx].time;
-                order.sellPrice = data.array[checkIdx].endprice;
+                if (lossCutPrice >= data.array[checkIdx].endprice)
+                {
+                    order.status = "F";
+                    order.sellDate = data.array[checkIdx].date;
+                    order.sellTime = data.array[checkIdx].time;
+                    order.sellPrice = data.array[checkIdx].endprice;
+                }
+                else if (lossCutPrice >= data.array[checkIdx].lowprice)
+                {
+                    order.status = "F";
+                    order.sellDate = data.array[checkIdx].date;
+                    order.sellTime = data.array[checkIdx].time;
+                    order.sellPrice = data.array[checkIdx].lowprice;
+                }
+                else if (profitCutPrice <= data.array[checkIdx].startprice)
+                {
+                    order.status = "W";
+                    order.sellDate = data.array[checkIdx].date;
+                    order.sellTime = data.array[checkIdx].time;
+                    order.sellPrice = data.array[checkIdx].startprice;
+                }
+                else if (profitCutPrice <= data.array[checkIdx].endprice)
+                {
+                    order.status = "W";
+                    order.sellDate = data.array[checkIdx].date;
+                    order.sellTime = data.array[checkIdx].time;
+                    order.sellPrice = data.array[checkIdx].endprice;
+                }
+                else if (profitCutPrice <= data.array[checkIdx].startprice)
+                {
+                    order.status = "W";
+                    order.sellDate = data.array[checkIdx].date;
+                    order.sellTime = data.array[checkIdx].time;
+                    order.sellPrice = data.array[checkIdx].highprice;
+                }
             }
-            else if (lossCutPrice >= data.array[checkIdx].lowprice)
-            {
-                order.status = "F";
-                order.sellDate = data.array[checkIdx].date;
-                order.sellTime = data.array[checkIdx].time;
-                order.sellPrice = data.array[checkIdx].lowprice;
-            }
-            else if (profitCutPrice <= data.array[checkIdx].startprice)
-            {
-                order.status = "W";
-                order.sellDate = data.array[checkIdx].date;
-                order.sellTime = data.array[checkIdx].time;
-                order.sellPrice = data.array[checkIdx].startprice;
-            }
-            else if (profitCutPrice <= data.array[checkIdx].endprice)
-            {
-                order.status = "W";
-                order.sellDate = data.array[checkIdx].date;
-                order.sellTime = data.array[checkIdx].time;
-                order.sellPrice = data.array[checkIdx].endprice;
-            }
-            else if (profitCutPrice <= data.array[checkIdx].startprice)
-            {
-                order.status = "W";
-                order.sellDate = data.array[checkIdx].date;
-                order.sellTime = data.array[checkIdx].time;
-                order.sellPrice = data.array[checkIdx].highprice;
-            }
-
             return order;
         }
 

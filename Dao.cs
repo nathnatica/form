@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,15 +24,15 @@ namespace WindowsFormsApp1
             // use offset(120) to idx when set to threeArray
 
 
-            Candle[] threeArray = new Candle[120 * dayCount];
+            Candle[] threeArray = new Candle[Constants.DAY_CANDLE_COUNT * dayCount];
             try
             {
-                string Query = "select date, time, start_price, end_price, high_price, low_price, volumn, avg_5, avg_20, avg_120 from three where code=@val1 and date <= @val2 order by date desc, time desc limit @val3;";
+                string Query = "select date, time, start_price, end_price, high_price, low_price, volumn, avg_5, avg_20, avg_120 from three where code=@val1 and date >= @val2 order by date asc, time asc limit @val3;";
                 MySqlConnection MyConn2 = GetConnection();
                 MySqlCommand cmd = new MySqlCommand(Query, MyConn2);
                 cmd.Parameters.AddWithValue("@val1", code);
                 cmd.Parameters.AddWithValue("@val2", date);
-                cmd.Parameters.AddWithValue("@val3", dayCount);
+                cmd.Parameters.AddWithValue("@val3", Constants.DAY_CANDLE_COUNT * dayCount);
                 MySqlDataReader MyReader2;
                 MyConn2.Open();
                 MyReader2 = cmd.ExecuteReader();
@@ -39,8 +40,8 @@ namespace WindowsFormsApp1
                 int i = 0;
                 while (MyReader2.Read())
                 {
-                    Console.WriteLine(MyReader2.GetInt32(0) + " - " + MyReader2.GetInt32(1));
                     Candle entity = new Candle();
+                    entity.code = code;
                     entity.date = MyReader2.GetInt32(0);
                     entity.time = MyReader2.GetInt32(1);
                     entity.startprice = MyReader2.GetInt32(2);
@@ -56,47 +57,46 @@ namespace WindowsFormsApp1
                 }
                 MyConn2.Close();
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Console.Write(e);
             }
 
-            Array.Reverse(threeArray);
             return threeArray;
         }
 
-        public void InsertThreeData(Candle data)
+        public void InsertThreeData(ArrayList array)
         {
             try
             {
-                string Query = "insert into three(code, date, time, start_price, end_price, high_price, low_price, volumn, avg_5, avg_20, avg_120 ) " +
-                    "select @val1, @val2, @val3, @val4, @val5, @val6, @val7, @val8, @val9, @val10, @val11 as tmp " +
-                    "where not exists (select 'x' from three where code = @val1 and date = @val2 and time = @val3);";
                 MySqlConnection MyConn2 = GetConnection();
-                MySqlCommand cmd = new MySqlCommand(Query, MyConn2);
-                cmd.Parameters.AddWithValue("@val1", data.code);
-                cmd.Parameters.AddWithValue("@val2", data.date);
-                cmd.Parameters.AddWithValue("@val3", data.time);
-                cmd.Parameters.AddWithValue("@val4", data.startprice);
-                cmd.Parameters.AddWithValue("@val5", data.endprice);
-                cmd.Parameters.AddWithValue("@val6", data.highprice);
-                cmd.Parameters.AddWithValue("@val7", data.lowprice);
-                cmd.Parameters.AddWithValue("@val8", data.volume);
-                cmd.Parameters.AddWithValue("@val9", data.avg5);
-                cmd.Parameters.AddWithValue("@val10", data.avg20);
-                cmd.Parameters.AddWithValue("@val11", data.avg120);
-                MySqlDataReader MyReader2;
                 MyConn2.Open();
-                MyReader2 = cmd.ExecuteReader();
-                while (MyReader2.Read())
+                foreach (Candle data in array)
                 {
-                    // ???
+                    string Query = "insert into three(code, date, time, start_price, end_price, high_price, low_price, volumn, avg_5, avg_20, avg_120 )" +
+                        " values (@val1, @val2, @val3, @val4, @val5, @val6, @val7, @val8, @val9, @val10, @val11)" +
+                        " on duplicate key update avg_5 = @val9, avg_20 = @val10, avg_120 = @val11";
+                    MySqlCommand cmd = new MySqlCommand(Query, MyConn2);
+                    cmd.Parameters.AddWithValue("@val1", data.code);
+                    cmd.Parameters.AddWithValue("@val2", data.date);
+                    cmd.Parameters.AddWithValue("@val3", data.time);
+                    cmd.Parameters.AddWithValue("@val4", data.startprice);
+                    cmd.Parameters.AddWithValue("@val5", data.endprice);
+                    cmd.Parameters.AddWithValue("@val6", data.highprice);
+                    cmd.Parameters.AddWithValue("@val7", data.lowprice);
+                    cmd.Parameters.AddWithValue("@val8", data.volume);
+                    cmd.Parameters.AddWithValue("@val9", data.avg5);
+                    cmd.Parameters.AddWithValue("@val10", data.avg20);
+                    cmd.Parameters.AddWithValue("@val11", data.avg120);
+                    MySqlDataReader MyReader2;
+                    MyReader2 = cmd.ExecuteReader();
+                    MyReader2.Close();
                 }
                 MyConn2.Close();
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Console.Write(ex);
-                MessageBox.Show(ex.Message);
+                Console.Write(e);
             }
         }
 
@@ -117,8 +117,9 @@ namespace WindowsFormsApp1
                 }
                 MyConn2.Close();
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Console.Write(e);
             }
 
             return seq;

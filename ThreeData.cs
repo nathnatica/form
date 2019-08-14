@@ -11,13 +11,27 @@ namespace WindowsFormsApp1
         public Candle[] array;
         public int dayStartIdx;
         public int dayHighPrice;
-        public int dayLowPrice;
+        public int dayLowPrice = Int32.MaxValue;
+        public int startDate;
+        public int endDate;
+        public int lastIdx;
+
+        public void print()
+        {
+            Console.WriteLine("START DATE : " + startDate);
+            Console.WriteLine("END   DATE : " + endDate);
+            Console.WriteLine("DAY START  : " + dayStartIdx);
+            Console.WriteLine("DAY HIGH   : " + dayHighPrice);
+            Console.WriteLine("DAY LOW    : " + dayLowPrice);
+            Console.WriteLine("LAST IDX   : " + lastIdx);
+        }
 
         public void AddThreeArray(Candle[] array)
         {
-            if (array == null || array.Length == 0)
+            if (this.array == null || this.array.Length == 0)
             {
                 this.array = array;
+                this.startDate = this.array[0].date;
             }
             else
             {
@@ -57,7 +71,6 @@ namespace WindowsFormsApp1
                     this.dayHighPrice = Math.Max(this.dayHighPrice, this.array[i].highprice);
                     this.dayLowPrice = Math.Min(this.dayLowPrice, this.array[i].lowprice);
 
-                    Console.WriteLine(this.array[i].time); // for check
                     if (i >= 4 && this.array[i].avg5 == 0)
                     {
                         int sum = 0;
@@ -87,6 +100,12 @@ namespace WindowsFormsApp1
                         }
                         this.array[i].avg120 = sum / 120;
                     }    
+                    this.endDate = this.array[i].date;
+                }
+                else
+                {
+                    this.lastIdx = i - 1;
+                    break; 
                 }
             }   
         }

@@ -33,59 +33,76 @@
             this.button3 = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
+            this.rebuild = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(114, 356);
+            this.button1.Location = new System.Drawing.Point(10, 196);
+            this.button1.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(103, 35);
+            this.button1.Size = new System.Drawing.Size(48, 18);
             this.button1.TabIndex = 0;
             this.button1.Text = "button1";
             this.button1.UseVisualStyleBackColor = true;
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(490, 336);
+            this.button2.Location = new System.Drawing.Point(226, 168);
+            this.button2.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(107, 65);
+            this.button2.Size = new System.Drawing.Size(49, 32);
             this.button2.TabIndex = 1;
-            this.button2.Text = "add three";
+            this.button2.Text = "load file";
             this.button2.UseVisualStyleBackColor = true;
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(490, 244);
+            this.button3.Location = new System.Drawing.Point(226, 122);
+            this.button3.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(107, 65);
+            this.button3.Size = new System.Drawing.Size(49, 32);
             this.button3.TabIndex = 2;
-            this.button3.Text = "get three";
+            this.button3.Text = "get";
             this.button3.UseVisualStyleBackColor = true;
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(618, 244);
+            this.textBox1.Location = new System.Drawing.Point(285, 122);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 35);
+            this.textBox1.Size = new System.Drawing.Size(48, 19);
             this.textBox1.TabIndex = 3;
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(618, 285);
+            this.textBox2.Location = new System.Drawing.Point(285, 142);
+            this.textBox2.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(100, 35);
+            this.textBox2.Size = new System.Drawing.Size(48, 19);
             this.textBox2.TabIndex = 4;
+            // 
+            // rebuild
+            // 
+            this.rebuild.Location = new System.Drawing.Point(285, 169);
+            this.rebuild.Name = "rebuild";
+            this.rebuild.Size = new System.Drawing.Size(51, 31);
+            this.rebuild.TabIndex = 5;
+            this.rebuild.Text = "rebuild";
+            this.rebuild.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 24F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(369, 225);
+            this.Controls.Add(this.rebuild);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
+            this.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
             this.Name = "Form1";
             this.Text = "Form1";
             this.ResumeLayout(false);
@@ -100,6 +117,7 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Button rebuild;
     }
 }
 

@@ -51,7 +51,13 @@ drop table three;
 create table three (code varchar(10), date int, time int, start_price int, end_price int, high_price int, low_price int, volumn int, avg_5 int, avg_20 int, avg_120 int, constraint pk_day primary key (code, date, time));
 
 
+//insert into three(code, date, time, start_price, end_price, high_price, low_price, volumn, avg_5, avg_20, avg_120 ) " +
+//                        "select @val1, @val2, @val3, @val4, @val5, @val6, @val7, @val8, @val9, @val10, @val11 as tmp " +
+//                        "where not exists (select 'x' from three where code = @val1 and date = @val2 and time = @val3);
 
+"insert into three(code, date, time, start_price, end_price, high_price, low_price, volumn, avg_5, avg_20, avg_120 )" +
+" values (@val1, @val2, @val3, @val4, @val5, @val6, @val7, @val8, @val9, @val10, @val11)" +
+" on duplicate key update avg_5 = @val9, avg_20 = @val10, avg_120 = @val11"
 
 
 drop table evaluate;

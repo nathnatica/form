@@ -1,21 +1,20 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using MySql.Data.MySqlClient;  //Its for MySQL
+using MySql.Data.MySqlClient;
 
 namespace WindowsFormsApp1
 {
     public partial class Form1 : Form
     {
-        int date = 1;
-        int time = 1;
-        int price = 1000;
 
         Dao dao = new Dao();
 
@@ -25,47 +24,69 @@ namespace WindowsFormsApp1
             this.button1.Click += this.Button1_Click;
             this.button2.Click += this.ThreeAddClick;
             this.button3.Click += this.ThreeGetClick;
+            this.rebuild.Click += this.Rebuild;
         }
         private void ThreeAddClick(object sender, EventArgs e)
         {
-            price += new Random().Next(-10, 11);
-
-            Candle three = new Candle();
-            three.code = "0001";
-            three.date = date;
-            three.time = time;
-            three.startprice = 1;
-            three.endprice = 1;
-            three.highprice = 1;
-            three.lowprice = 1;
-            three.volume = 1;
-
-
-            dao.InsertThreeData(three);
-
-            time += 1;
-            if (time >= 6)
+            ArrayList array = new ArrayList();
+            string[] lines = File.ReadAllLines("C:\\TEMP\\1.txt");
+            foreach (string line in lines)
             {
-                date += 1;
-                time = 1;
+                string[] sp = line.Split('\t');
+                Candle three = new Candle();
+                three.code = sp[0];
+                three.date = Int32.Parse(sp[1]);
+                three.time = Int32.Parse(sp[2]);
+                three.startprice = Int32.Parse(sp[3]);
+                three.endprice = Int32.Parse(sp[4]);
+                three.highprice = Int32.Parse(sp[5]);
+                three.lowprice = Int32.Parse(sp[6]);
+                three.volume = Int32.Parse(sp[7]);
+                array.Add(three);
+            }
+            dao.InsertThreeData(array);
+        }
+
+        private void UpdateAvgData(string code, int startDate, int endDate)
+        {
+            ThreeData d = GetThreeData(code, startDate, 2);
+            d.print(); // TODO for check
+            if (d.array != null)
+            {
+                dao.InsertThreeData(new ArrayList(d.array));
+                if (d.endDate != 0 && d.startDate != d.endDate && d.endDate <= endDate)
+                {
+                    UpdateAvgData(code, d.endDate, endDate);
+                }
             }
         }
 
         private void ThreeGetClick(object sender, EventArgs e)
         {
-            ThreeData d = this.GetThreeData("0001", Int32.Parse(this.textBox1.Text), Int32.Parse(this.textBox2.Text));
+            ThreeData d = GetThreeData("0001", 20180814, 2);
+            //ThreeData d = this.GetThreeData("0001", Int32.Parse(this.textBox1.Text), Int32.Parse(this.textBox2.Text));
+            d.print(); // TODO for check
+
             Orders orders = new Orders();
             Check.ThreeDataCheck(d, orders);
             orders.Evaluate();
         }
 
+        private void Rebuild(object sender, EventArgs e)
+        {
+            this.UpdateAvgData("0001", Int32.Parse(this.textBox1.Text), Int32.Parse(this.textBox2.Text));
+            this.UpdateAvgData("0001", Int32.Parse("20190814"), Int32.Parse("2"));
+        }
 
         private ThreeData GetThreeData(string code, int date, int dayCount)
         {
-            Candle[] dbData = dao.GetThreeDataFromDB(code, date, dayCount);
             ThreeData d = new ThreeData();
-            d.AddThreeArray(dbData);
-            d.CreateAvgData(0);
+            Candle[] dbData = dao.GetThreeDataFromDB(code, date, dayCount);
+            if (dbData != null && dbData.Length > 0)
+            {
+                d.AddThreeArray(dbData);
+                d.CreateAvgData(0);
+            }
             return d;
         }
         
