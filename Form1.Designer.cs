@@ -34,6 +34,7 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.rebuild = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -91,11 +92,21 @@
             this.rebuild.Text = "rebuild";
             this.rebuild.UseVisualStyleBackColor = true;
             // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(109, 151);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(75, 49);
+            this.button4.TabIndex = 6;
+            this.button4.Text = "Single Simulate";
+            this.button4.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(369, 225);
+            this.Controls.Add(this.button4);
             this.Controls.Add(this.rebuild);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.textBox1);
@@ -118,6 +129,7 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Button rebuild;
+        private System.Windows.Forms.Button button4;
     }
 }
 

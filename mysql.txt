@@ -62,6 +62,12 @@ create table three (code varchar(10), date int, time int, start_price int, end_p
 
 drop table evaluate;
 create table evaluate (seq int not null auto_increment, date int, rule varchar(5000), check_total int, check_matched int, win_count int, lose_count int, match_rate decimal(7,2), winning_rate decimal(5,2), total_profit_rate decimal(5,2), primary key (seq));
+alter table evaluate add index evaluate_winning_rate(winning_rate);
+alter table evaluate add index evaluate_profit_rate(total_profit_rate);
+
+select count(*) from evaluate;
+truncate table evaluate;
+select * from evaluate order by total_profit_rate desc;
 
 
 drop table evaluate_detail;

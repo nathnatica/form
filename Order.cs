@@ -19,16 +19,16 @@ namespace WindowsFormsApp1
         public int sellDate;
         public int sellTime;
 
-        public float GetProfit()
+        public decimal GetProfit()
         {
-            return (sellPrice - buyPrice) / buyPrice * 100;
+            return Util.NumberFormat((sellPrice - buyPrice) * 100.0f / buyPrice);
         }
 
 
         public string GetSummary()
         {
-            return "[ ] CODE : " + code + ", BUY : " + buyPrice + ", AT " + buyDate + " " + buyTime + "\n" + 
-                "[" + status + "] CODE : " + code + ", BUY : " + sellPrice + ", AT " + sellDate + " " + sellTime;
+            return "[ ] CODE : " + code + ", BUY  : " + buyPrice + ", AT " + buyDate + " " + buyTime + "\n" + 
+                "[" + status + "] CODE : " + code + ", SELL : " + sellPrice + ", AT " + sellDate + " " + sellTime + "\t" + GetProfit() + "%";
         }
 
     }

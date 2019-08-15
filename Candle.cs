@@ -33,9 +33,32 @@ namespace WindowsFormsApp1
 
         public Boolean IsBodySizePercent(float target)
         {
-            return (Math.Abs(startprice - endprice) * 100 / startprice) <= target;
+            // current price ???
+            return (Math.Abs(startprice - endprice) * 100.0f / startprice) <= target;
         } 
 
+        public Boolean IsAvg5UpperThanAvg20()
+        {
+            return avg5 > avg20;
+        }
+        public Boolean IsAvg20UpperThanAvg120()
+        {
+            return avg20 > avg120;
+        }
 
+        public Boolean IsAvgGolden()
+        {
+            return IsAvg5UpperThanAvg20() && IsAvg20UpperThanAvg120();
+        }
+
+        public Boolean IsIncludeTime(int start, int end)
+        {
+            return start <= time && time <= end;
+        }
+
+        public Boolean IsExcludeTime(int start, int end)
+        {
+            return !IsIncludeTime(start, end);
+        }
     }
 }

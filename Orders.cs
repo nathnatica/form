@@ -9,12 +9,13 @@ namespace WindowsFormsApp1
 {
     class Orders
     {
+        public int date;
         public int checkTotal;
         public int winCount;
         public int loseCount;
         public string rule;
 
-        ArrayList orderList = new ArrayList();
+        public ArrayList orderList = new ArrayList();
 
         public void AddOrder(Order order)
         {
@@ -29,25 +30,25 @@ namespace WindowsFormsApp1
             orderList.Add(order);
         }
 
-        public float GetMatchRate()
+        public decimal GetMatchRate()
         {
-            return (winCount + loseCount) / checkTotal * 100;
+            return Util.NumberFormat((winCount + loseCount) * 100.0f / checkTotal);
         }
 
-        public float GetWinningRate()
+        public decimal GetWinningRate()
         {
             if (winCount + loseCount > 0)
             {
-                return winCount / (winCount + loseCount) * 100;
+                return Util.NumberFormat(winCount * 100.0f / (winCount + loseCount));
             } else
             {
                 return 0;
             }
         }
 
-        public float GetTotalProfitRate()
+        public decimal GetTotalProfitRate()
         {
-            float totalProfit = 0;
+            decimal totalProfit = 0;
             foreach (Order item in orderList)
             {
                 totalProfit += item.GetProfit();
@@ -67,8 +68,8 @@ namespace WindowsFormsApp1
         public string GetSummary()
         {
             return "==========================\n" +
-                "MATCHED : " + (winCount + loseCount) + "/" + checkTotal + " (" + GetMatchRate() + "%)\n" +
-                "WIN  : " + winCount + ", LOSE : " + loseCount + " (" + GetWinningRate() + "%)\n" +
+                "MATCHED      : " + (winCount + loseCount) + "/" + checkTotal + " (" + GetMatchRate() + "%)\n" +
+                "WIN/LOSE     : " + winCount + "/" + loseCount + " (" + GetWinningRate() + "%)\n" +
                 "TOTAL PROFIT : " + GetTotalProfitRate() + "%";
         }
 

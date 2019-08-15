@@ -99,6 +99,37 @@ namespace WindowsFormsApp1
                 Console.Write(e);
             }
         }
+        public void InsertEvaluateData(ArrayList array)
+        {
+            try
+            {
+                MySqlConnection MyConn2 = GetConnection();
+                MyConn2.Open();
+                foreach (Orders data in array)
+                {
+                    string Query = "insert into evaluate(date, rule, check_total, check_matched, win_count, lose_count, match_rate, winning_rate, total_profit_rate)" +
+                        " values (@val1, @val2, @val3, @val4, @val5, @val6, @val7, @val8, @val9)";
+                    MySqlCommand cmd = new MySqlCommand(Query, MyConn2);
+                    cmd.Parameters.AddWithValue("@val1", data.date);
+                    cmd.Parameters.AddWithValue("@val2", data.rule);
+                    cmd.Parameters.AddWithValue("@val3", data.checkTotal);
+                    cmd.Parameters.AddWithValue("@val4", data.winCount + data.loseCount);
+                    cmd.Parameters.AddWithValue("@val5", data.winCount);
+                    cmd.Parameters.AddWithValue("@val6", data.loseCount);
+                    cmd.Parameters.AddWithValue("@val7", data.GetMatchRate());
+                    cmd.Parameters.AddWithValue("@val8", data.GetWinningRate());
+                    cmd.Parameters.AddWithValue("@val9", data.GetTotalProfitRate());
+                    MySqlDataReader MyReader2;
+                    MyReader2 = cmd.ExecuteReader();
+                    MyReader2.Close();
+                }
+                MyConn2.Close();
+            }
+            catch (Exception e)
+            {
+                Console.Write(e);
+            }
+        }
 
         public int GetNextSeq()
         {

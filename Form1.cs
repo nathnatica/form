@@ -25,6 +25,7 @@ namespace WindowsFormsApp1
             this.button2.Click += this.ThreeAddClick;
             this.button3.Click += this.ThreeGetClick;
             this.rebuild.Click += this.Rebuild;
+            this.button4.Click += this.Simulate;
         }
         private void ThreeAddClick(object sender, EventArgs e)
         {
@@ -47,10 +48,88 @@ namespace WindowsFormsApp1
             dao.InsertThreeData(array);
         }
 
+        private void ThreeGetClick(object sender, EventArgs e)
+        {
+            //ThreeData d = this.GetThreeData("0001", Int32.Parse(this.textBox1.Text), Int32.Parse(this.textBox2.Text));
+            int checkDate = 20190814;
+            string code = "0001";
+            ThreeData d = GetThreeData(code, checkDate, 2);
+            d.Print(); // TODO for check
+
+            //string buyRule = "IsPlus&IsAvgGolden&IsIncludeTime 930,1430&IsUpperThanDayStartPrice&IsAvg5ChangeToUp&IsAvg120Rising -10,-5";
+
+            ArrayList ordersArray = new ArrayList();
+
+            HashSet<string> ruleSet = BuyRule.Pattern.GetMassRule();
+            Console.WriteLine("[CHECK] RULE TOTAL : " + ruleSet.Count());
+
+            foreach (string buyRule in ruleSet)
+            {
+                Orders orders = new Orders();
+                Check.CheckThreeData(d, buyRule, orders);
+                if (orders.orderList.Count > 0)
+                {
+                    orders.rule = buyRule;
+                    orders.date = checkDate; // TODO change to test date
+                    ordersArray.Add(orders);
+                    //orders.Evaluate();
+                }
+            }
+
+            Console.WriteLine("INSERT TO EVALUATE START");
+            dao.InsertEvaluateData(ordersArray);
+            Console.WriteLine("INSERT TO EVALUATE END");
+        }
+
+        private void Simulate(object sender, EventArgs e)
+        {
+            int start = 20190814;
+            int end = 20190814;
+            string code = "0001";
+            string rule = "IsAvg5Rising -1,0&IsAvg20Rising -2,0";
+
+            Orders orders = new Orders();
+
+            ArrayList codeList = new ArrayList();
+            codeList.Add(code);
+            SingleRuleSimulate(start, end, codeList, rule, orders);
+
+            if (orders.orderList.Count > 0)
+            {
+                orders.rule = rule;
+                orders.date = end; // TODO change to test date
+                orders.Evaluate();
+            }
+        }
+
+        private void SingleRuleSimulate(int startDate, int endDate, ArrayList codeList, string buyRule, Orders orders)
+        {
+            foreach (string code in codeList)
+            {
+                SingleRuleSimulate(startDate, endDate, code, buyRule, orders);
+            }
+        }
+
+        private void SingleRuleSimulate(int startDate, int endDate, string code, string buyRule, Orders orders)
+        {
+            ThreeData d = GetThreeData(code, startDate, 2);
+            Check.CheckThreeData(d, buyRule, orders);
+            if (d.endDate < endDate)
+            {
+                SingleRuleSimulate(d.endDate, endDate, code, buyRule, orders);
+            }
+        }
+
+        private void Rebuild(object sender, EventArgs e)
+        {
+            //this.UpdateAvgData("0001", Int32.Parse(this.textBox1.Text), Int32.Parse(this.textBox2.Text));
+            this.UpdateAvgData("0001", Int32.Parse("20190814"), Int32.Parse("20190815"));
+        }
+
         private void UpdateAvgData(string code, int startDate, int endDate)
         {
             ThreeData d = GetThreeData(code, startDate, 2);
-            d.print(); // TODO for check
+            d.Print(); // TODO for check
             if (d.array != null)
             {
                 dao.InsertThreeData(new ArrayList(d.array));
@@ -59,23 +138,6 @@ namespace WindowsFormsApp1
                     UpdateAvgData(code, d.endDate, endDate);
                 }
             }
-        }
-
-        private void ThreeGetClick(object sender, EventArgs e)
-        {
-            ThreeData d = GetThreeData("0001", 20180814, 2);
-            //ThreeData d = this.GetThreeData("0001", Int32.Parse(this.textBox1.Text), Int32.Parse(this.textBox2.Text));
-            d.print(); // TODO for check
-
-            Orders orders = new Orders();
-            Check.ThreeDataCheck(d, orders);
-            orders.Evaluate();
-        }
-
-        private void Rebuild(object sender, EventArgs e)
-        {
-            this.UpdateAvgData("0001", Int32.Parse(this.textBox1.Text), Int32.Parse(this.textBox2.Text));
-            this.UpdateAvgData("0001", Int32.Parse("20190814"), Int32.Parse("2"));
         }
 
         private ThreeData GetThreeData(string code, int date, int dayCount)
@@ -89,7 +151,6 @@ namespace WindowsFormsApp1
             }
             return d;
         }
-        
 
         private void Button1_Click(object sender, EventArgs e)
         {

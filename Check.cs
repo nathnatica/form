@@ -8,8 +8,13 @@ namespace WindowsFormsApp1
 {
     class Check
     {
-        public static void ThreeDataCheck(ThreeData d, Orders orders)
+        public static void CheckThreeData(ThreeData d, String buyRule, Orders orders)
         {
+            if (d.array == null)
+            {
+                return;
+            }
+
             orders.checkTotal += 1;
             Order order = null;
             for (int i = d.dayStartIdx; i < d.array.Length; i++)
@@ -18,7 +23,7 @@ namespace WindowsFormsApp1
 
                 if (order == null)
                 {
-                    order = BuyCheck(d, i);
+                    order = BuyCheck(d, i, buyRule);
                 }
                 else
                 {
@@ -43,7 +48,16 @@ namespace WindowsFormsApp1
 
             if (data.array[checkIdx] != null)
             {
-                if (lossCutPrice >= data.array[checkIdx].endprice)
+                int currentPrice = (data.array[checkIdx].startprice + data.array[checkIdx].endprice) / 2;
+                if (lossCutPrice >= currentPrice)
+                {
+                    //Console.WriteLine("LOSSCUT CURRENT PRICE : " + lossCutPrice);
+                    order.status = "F";
+                    order.sellDate = data.array[checkIdx].date;
+                    order.sellTime = data.array[checkIdx].time;
+                    order.sellPrice = currentPrice;
+                }
+                else if (lossCutPrice >= data.array[checkIdx].endprice)
                 {
                     order.status = "F";
                     order.sellDate = data.array[checkIdx].date;
@@ -82,18 +96,21 @@ namespace WindowsFormsApp1
             return order;
         }
 
-        private static Order BuyCheck(ThreeData data, int checkIdx)
+        private static Order BuyCheck(ThreeData data, int checkIdx, string ruleString)
         {
-            // rule check and if ng then return null
-
-
-            Order order = new Order();
-            order.status = "S";
-            order.code = data.array[checkIdx].code;
-            order.buyDate = data.array[checkIdx].date;
-            order.buyTime = data.array[checkIdx].time;
-            order.buyPrice = data.array[checkIdx].endprice;
-            return order;
+            if (BuyRule.Judge(data, checkIdx, ruleString) == false)
+            {
+                return null;
+            } else
+            {
+                Order order = new Order();
+                order.status = "S";
+                order.code = data.array[checkIdx].code;
+                order.buyDate = data.array[checkIdx].date;
+                order.buyTime = data.array[checkIdx].time;
+                order.buyPrice = data.array[checkIdx].endprice;
+                return order;
+            }
         }
     }
 }

@@ -14,5 +14,10 @@ namespace WindowsFormsApp1
             int minute = time - (hour * 100);
             return (hour - 9) * 20 + (minute / 3);
         }
+
+        public static decimal NumberFormat(float f)
+        {
+            return Math.Round(Convert.ToDecimal(f), 2);
+        }
     }
 }

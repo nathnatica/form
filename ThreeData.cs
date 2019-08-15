@@ -9,6 +9,7 @@ namespace WindowsFormsApp1
     class ThreeData
     {
         public Candle[] array;
+        public string code;
         public int dayStartIdx;
         public int dayHighPrice;
         public int dayLowPrice = Int32.MaxValue;
@@ -16,22 +17,28 @@ namespace WindowsFormsApp1
         public int endDate;
         public int lastIdx;
 
-        public void print()
+        public void Print()
         {
-            Console.WriteLine("START DATE : " + startDate);
-            Console.WriteLine("END   DATE : " + endDate);
-            Console.WriteLine("DAY START  : " + dayStartIdx);
-            Console.WriteLine("DAY HIGH   : " + dayHighPrice);
-            Console.WriteLine("DAY LOW    : " + dayLowPrice);
-            Console.WriteLine("LAST IDX   : " + lastIdx);
+            Console.WriteLine("=================================");
+            Console.WriteLine("START DATE    : " + startDate);
+            Console.WriteLine("END   DATE    : " + endDate);
+            Console.WriteLine("DAY START IDX : " + dayStartIdx);
+            Console.WriteLine("DAY HIGH      : " + dayHighPrice);
+            Console.WriteLine("DAY LOW       : " + dayLowPrice);
+            Console.WriteLine("LAST IDX      : " + lastIdx);
+            Console.WriteLine("=================================");
         }
 
         public void AddThreeArray(Candle[] array)
         {
             if (this.array == null || this.array.Length == 0)
             {
-                this.array = array;
-                this.startDate = this.array[0].date;
+                if (array != null && array[0] != null)
+                {
+                    this.array = array;
+                    this.startDate = this.array[0].date;
+                    this.code = this.array[0].code;
+                }
             }
             else
             {
@@ -59,6 +66,11 @@ namespace WindowsFormsApp1
 
         public void CreateAvgData(int startIdx)
         {
+            if (this.array == null)
+            {
+                return;
+            }
+
             for (int i = startIdx; i < this.array.Length -1; i++)
             {
                 if (this.array[i] != null)
@@ -66,6 +78,7 @@ namespace WindowsFormsApp1
                     if (i > 0 && this.array[i].date != this.array[i - 1].date)
                     {
                         this.dayStartIdx = i;
+
                     }
 
                     this.dayHighPrice = Math.Max(this.dayHighPrice, this.array[i].highprice);
@@ -109,5 +122,138 @@ namespace WindowsFormsApp1
                 }
             }   
         }
+
+        public Boolean IsUpperThanDayStartPrice(int current)
+        {
+            if (array[dayStartIdx] != null && array[dayStartIdx].startprice != 0)
+            {
+                if (array[current] != null && array[current].endprice != 0) // current price ???
+                {
+                    return array[dayStartIdx].startprice < array[current].endprice;
+                }
+            }
+            return false;
+        }
+
+        public Boolean IsAvg5Rising(int olderOffset, int oldOffset, int current)
+        {
+            if (current <= array.Length - 1 && current - olderOffset >= 0)
+            {
+                if (array[current - olderOffset] != null && array[current - oldOffset] != null)
+                {
+                    if (array[current - olderOffset].avg5 != 0 && array[current - oldOffset].avg5 != 0)
+                    {
+                        return array[current - olderOffset].avg5 < array[current - oldOffset].avg5;
+                    }
+                }
+                else if (array[current - olderOffset] == null || array[current - olderOffset].avg5 == 0)
+                {
+                    //Console.WriteLine("[" + code + "][" + endDate + "] avg5 value is not set. index = " + (current - olderOffset));
+                }
+                else if (array[current - oldOffset] != null || array[current - oldOffset].avg5 != 0)
+                {
+                    //Console.WriteLine("[" + code + "][" + endDate + "] avg5 value is not set. index = " + (current - oldOffset));
+                }
+            } else
+            {
+                Console.WriteLine("[" + code + "][" + endDate + "] Index out of bound. older index = " + (current - olderOffset) + ", current index = " + current);
+            }
+            return false;
+        }
+        private Boolean IsAvg5Falling(int olderOffset, int oldOffset, int current)
+        {
+            if (current <= array.Length - 1 && current - olderOffset >= 0)
+            {
+                if (array[current - olderOffset] != null && array[current - oldOffset] != null)
+                {
+                    if (array[current - olderOffset].avg5 != 0 && array[current - oldOffset].avg5 != 0)
+                    {
+                        return array[current - olderOffset].avg5 > array[current - oldOffset].avg5;
+                    }
+                }
+                else if (array[current - olderOffset] == null || array[current - olderOffset].avg5 == 0)
+                {
+                    //Console.WriteLine("[" + code + "][" + endDate + "] avg5 value is not set. index = " + (current - olderOffset));
+                }
+                else if (array[current - oldOffset] != null || array[current - oldOffset].avg5 != 0)
+                {
+                    //Console.WriteLine("[" + code + "][" + endDate + "] avg5 value is not set. index = " + (current - oldOffset));
+                }
+            } else
+            {
+                Console.WriteLine("[" + code + "][" + endDate + "] Index out of bound. older index = " + (current - olderOffset) + ", current index = " + current);
+            }
+            return false;
+        }
+
+        public Boolean IsAvg20Rising(int olderOffset, int oldOffset, int current)
+        {
+            if (current <= array.Length - 1 && current - olderOffset >= 0)
+            {
+                if (array[current - olderOffset] != null && array[current - oldOffset] != null)
+                {
+                    if (array[current - olderOffset].avg20 != 0 && array[current - oldOffset].avg20 != 0)
+                    {
+                        return array[current - olderOffset].avg20 < array[current - oldOffset].avg20;
+                    }
+                }
+                else if (array[current - olderOffset] == null || array[current - olderOffset].avg20 == 0)
+                {
+                    //Console.WriteLine("[" + code + "][" + endDate + "] avg20 value is not set. index = " + (current - olderOffset));
+                }
+                else if (array[current - oldOffset] != null || array[current - oldOffset].avg20 != 0)
+                {
+                    //Console.WriteLine("[" + code + "][" + endDate + "] avg20 value is not set. index = " + (current - oldOffset));
+                }
+            } else
+            {
+                Console.WriteLine("[" + code + "][" + endDate + "] Index out of bound. older index = " + (current - olderOffset) + ", current index = " + current);
+            }
+            return false;
+        }
+
+        public Boolean IsAvg120Rising(int olderOffset, int oldOffset, int current)
+        {
+            if (current <= array.Length - 1 && current - olderOffset >= 0)
+            {
+                if (array[current - olderOffset] != null && array[current - oldOffset] != null)
+                {
+                    if (array[current - olderOffset].avg120 != 0 && array[current - oldOffset].avg120 != 0)
+                    {
+                        return array[current - olderOffset].avg120 < array[current - oldOffset].avg120;
+                    }
+                }
+                else if (array[current - olderOffset] == null || array[current - olderOffset].avg120 == 0)
+                {
+                    //Console.WriteLine("[" + code + "][" + endDate + "] avg120 value is not set. index = " + (current - olderOffset));
+                }
+                else if (array[current - oldOffset] != null || array[current - oldOffset].avg120 != 0)
+                {
+                    //Console.WriteLine("[" + code + "][" + endDate + "] avg120 value is not set. index = " + (current - oldOffset));
+                }
+            } else
+            {
+                Console.WriteLine("[" + code + "][" + endDate + "] Index out of bound. older index = " + (current - olderOffset) + ", current index = " + current);
+            }
+            return false;
+        }
+
+        public Boolean IsAvg5ChangeToUp(int current)
+        {
+            return IsAvg5Falling(-2, -1, current) && IsAvg5Rising(-1, -0, current);
+        }
+
+        public Boolean IsVolumeRising(int current)
+        {
+            if (array[current - 1] != null && array[current - 1].volume != 0)
+            {
+                if (array[current] != null && array[current].volume != 0)
+                {
+                    return array[current - 1].volume < array[current].volume;
+                }
+            }
+            return false;
+        }
+
     }
 }
