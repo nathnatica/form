@@ -19,5 +19,15 @@ namespace WindowsFormsApp1
         {
             return Math.Round(Convert.ToDecimal(f), 2);
         }
+
+        public static int GetDateNow()
+        {
+            DateTime now = DateTime.Now;
+            //Console.WriteLine(now.Hour);
+            //Console.WriteLine(now.Minute);
+            int date = (now.Year * 10000) + (now.Month * 100) + now.Day;
+            return date; ;
+        }
+
     }
 }

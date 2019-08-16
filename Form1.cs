@@ -26,33 +26,42 @@ namespace WindowsFormsApp1
             this.button3.Click += this.ThreeGetClick;
             this.rebuild.Click += this.Rebuild;
             this.button4.Click += this.Simulate;
+
+
+            Util.GetDateNow(); // TODO 
+
+            this.textBox1.Text = Convert.ToString(20190814); // TODO
+            this.textBox2.Text = Convert.ToString(20190814); // TODO
+
         }
         private void ThreeAddClick(object sender, EventArgs e)
         {
-            ArrayList array = new ArrayList();
-            string[] lines = File.ReadAllLines("C:\\TEMP\\1.txt");
-            foreach (string line in lines)
-            {
-                string[] sp = line.Split('\t');
-                Candle three = new Candle();
-                three.code = sp[0];
-                three.date = Int32.Parse(sp[1]);
-                three.time = Int32.Parse(sp[2]);
-                three.startprice = Int32.Parse(sp[3]);
-                three.endprice = Int32.Parse(sp[4]);
-                three.highprice = Int32.Parse(sp[5]);
-                three.lowprice = Int32.Parse(sp[6]);
-                three.volume = Int32.Parse(sp[7]);
-                array.Add(three);
+            for (int i=1; i<=4; i++) {
+                ArrayList array = new ArrayList();
+                string[] lines = File.ReadAllLines("C:\\TEMP\\" + i + ".txt");
+                foreach (string line in lines)
+                {
+                    string[] sp = line.Split('\t');
+                    Candle three = new Candle();
+                    three.code = sp[0];
+                    three.date = Int32.Parse(sp[1]);
+                    three.time = Int32.Parse(sp[2]);
+                    three.startprice = Int32.Parse(sp[3]);
+                    three.endprice = Int32.Parse(sp[4]);
+                    three.highprice = Int32.Parse(sp[5]);
+                    three.lowprice = Int32.Parse(sp[6]);
+                    three.volume = Int32.Parse(sp[7]);
+                    array.Add(three);
+                }
+                dao.InsertThreeData(array);
             }
-            dao.InsertThreeData(array);
         }
 
         private void ThreeGetClick(object sender, EventArgs e)
         {
             //ThreeData d = this.GetThreeData("0001", Int32.Parse(this.textBox1.Text), Int32.Parse(this.textBox2.Text));
-            int checkDate = 20190814;
             string code = "0001";
+            int checkDate = 20190814;
             ThreeData d = GetThreeData(code, checkDate, 2);
             d.Print(); // TODO for check
 
@@ -70,7 +79,7 @@ namespace WindowsFormsApp1
                 if (orders.orderList.Count > 0)
                 {
                     orders.rule = buyRule;
-                    orders.date = checkDate; // TODO change to test date
+                    orders.date = Util.GetDateNow();
                     ordersArray.Add(orders);
                     //orders.Evaluate();
                 }
@@ -83,9 +92,9 @@ namespace WindowsFormsApp1
 
         private void Simulate(object sender, EventArgs e)
         {
-            int start = 20190814;
-            int end = 20190814;
             string code = "0001";
+            int start = Int32.Parse(this.textBox1.Text);
+            int end = Int32.Parse(this.textBox2.Text);
             string rule = "IsAvg5Rising -1,0&IsAvg20Rising -2,0";
 
             Orders orders = new Orders();
@@ -97,7 +106,7 @@ namespace WindowsFormsApp1
             if (orders.orderList.Count > 0)
             {
                 orders.rule = rule;
-                orders.date = end; // TODO change to test date
+                orders.date = Util.GetDateNow();
                 orders.Evaluate();
             }
         }
@@ -122,17 +131,17 @@ namespace WindowsFormsApp1
 
         private void Rebuild(object sender, EventArgs e)
         {
-            //this.UpdateAvgData("0001", Int32.Parse(this.textBox1.Text), Int32.Parse(this.textBox2.Text));
-            this.UpdateAvgData("0001", Int32.Parse("20190814"), Int32.Parse("20190815"));
+            this.UpdateAvgData("0001", Int32.Parse(this.textBox1.Text), Int32.Parse(this.textBox2.Text));
+            //this.UpdateAvgData("0001", Int32.Parse("20190814"), Int32.Parse("20190815"));
         }
 
         private void UpdateAvgData(string code, int startDate, int endDate)
         {
             ThreeData d = GetThreeData(code, startDate, 2);
-            d.Print(); // TODO for check
             if (d.array != null)
             {
                 dao.InsertThreeData(new ArrayList(d.array));
+                //Console.WriteLine(startDate + " - " + endDate); // TODO
                 if (d.endDate != 0 && d.startDate != d.endDate && d.endDate <= endDate)
                 {
                     UpdateAvgData(code, d.endDate, endDate);

@@ -8,6 +8,6 @@ namespace WindowsFormsApp1
 {
     class Constants
     {
-        public static int DAY_CANDLE_COUNT = 130;
+        public static int DAY_CANDLE_COUNT = 129;
     }
 }
