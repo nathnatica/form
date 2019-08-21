@@ -4,18 +4,28 @@ create database testdb;
 
 use testdb;
 
+------------------------------------------
 
 drop table item;
-create table item (code varchar(10), name varchar(100), target varchar(1), opt varchar(1), primary key (code));
+create table item (code varchar(10), name varchar(100), target varchar(1), day_start_date int, day_end_date int, upd_date int, opt1 varchar(10), opt2 varchar(10), opt3 varchar(10), primary key (code));
 
-insert into item (code, name, target, option) 
-select * from (select '0001', 'xxxx', 'x', 'x') as tmp 
-where not exists (select code from item where code = '0001');
+insert into item (code, name, target, day_start_date, day_end_date, upd_date, opt1, opt2, opt3) 
+values (@val1, @val2, @val3, @val4, @val5, @val6, @val7, @val8, @val9)
+on duplicate key update target = @val3, day_start_date = @val4, day_end_date = @val5, upd_date = @val6, opt1 = @val7, opt2 = @val8, opt3 = @val9
 
+insert into item (code, name, target, day_start_date, day_end_date, upd_date, opt1, opt2, opt3)
+values ('0001','code name','0',null,null,null,null,null,null);
+
+------------------------------------------
 
 drop table day;
-create table day (code varchar(10), no int, date int, start_price int, end_price int, high_price int, low_price int, volumn int, avg_5 int, avg_20 int, avg_120 int, constraint pk_day primary key (code, date));
-alter table day add index day_no(code, no);
+create table day (code varchar(10), date int, start_price int, end_price int, high_price int, low_price int, volume int, avg_5 int, avg_20 int, avg_120 int, constraint pk_day primary key (code, date));
+--alter table day add index day_no(code, no);
+
+
+insert into day (code, date, start_price, end_price, high_price, low_price, volume, avg_5, avg_20, avg_120) 
+values (@val1, @val2, @val3, @val4, @val5, @val6, @val7, @val8, @val9, @val10)
+on duplicate key update avg_5 = @val8, avg_20 = @val9, avg_120 = @val10
 
 
 insert into day (code, no, date, end_price) 
@@ -46,6 +56,7 @@ insert into day (code, no, date, end_price)
 select * from (select '0001', (select ifnull(max(no),0)+1 from day where code = '0001'), 190807, 7000) as tmp 
 where not exists (select date from day where code = '0001' and date = 190807);
 
+------------------------------------------
 
 drop table three;
 create table three (code varchar(10), date int, time int, start_price int, end_price int, high_price int, low_price int, volumn int, avg_5 int, avg_20 int, avg_120 int, constraint pk_day primary key (code, date, time));

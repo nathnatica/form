@@ -16,11 +16,12 @@ namespace WindowsFormsApp1
         public string currentAccount = "";
 
         Dao dao = new Dao();
+        List<Item> itemList;
 
         public Form1()
         {
             InitializeComponent();
-            this.button1.Click += this.Button1_Click;
+            this.refresh.Click += this.ItemRefreshClick;
             this.button2.Click += this.ThreeAddClick;
             this.button3.Click += this.ThreeGetClick;
             this.rebuild.Click += this.Rebuild;
@@ -34,6 +35,8 @@ namespace WindowsFormsApp1
             this.axKHOpenAPI1.OnReceiveChejanData += this.axKHOpenApi_OnReceiveChejanData;
 
             this.accountComboBox.SelectedIndexChanged += this.accountComboBox_SelectedIndexChanged;
+
+            this.itemGridView.CellContentClick += this.itemGridView_CellContentClick;
 
             Util.GetDateNow(); // TODO 
 
@@ -178,6 +181,17 @@ namespace WindowsFormsApp1
             axKHOpenAPI1.SetInputValue("비밀번호입력매체구분", "00");
 
             int result = axKHOpenAPI1.CommRqData("계좌평가현황요청", "OPW00004", 0, "6001");
+        }
+
+        private void itemGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            var sendGrid = (DataGridView)sender;
+            if (sendGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn && e.RowIndex >= 0)
+            {
+                string targetValue = this.itemGridView.Rows[e.RowIndex].Cells[3].Value.ToString();
+                Console.WriteLine(targetValue); // TODO
+                // TODO
+            }
         }
 
         private void InquireCodeInfo()
@@ -359,36 +373,10 @@ namespace WindowsFormsApp1
             }
         }
 
-        private void Button1_Click(object sender, EventArgs e)
+        private void ItemRefreshClick(object sender, EventArgs e)
         {
-            //try
-            //{
-            //    //this is my insert query in which i am taking input from the user through windows forms  
-            //    string query = "insert into day(code, no, date, end_price) " +
-            //        "select * from (select '0001', (select ifnull(max(no),0)+1 from day where code = '0001'), " +
-            //        date +
-            //        ", " +
-            //        price +
-            //        ") as tmp where not exists (select date from day where code = '0001' and date = " +
-            //        date +
-            //        ");";
-            //    //this is command class which will handle the query and connection object.
-            //    mysqlconnection myconn2 = getconnection();
-            //    mysqlcommand mycommand2 = new mysqlcommand(query, myconn2);
-            //    mysqldatareader myreader2;
-            //    myconn2.open();
-            //    myreader2 = mycommand2.executereader();     // here our query will be executed and data saved into the database.  
-            //    while (myreader2.read())
-            //    {
-            //    }
-            //    myconn2.close();
-
-            //    date += 1; // todo
-            //    price += new random().next(-10, 11); // todo //}
-            //catch (exception ex)
-            //{
-            //    messagebox.show(ex.message);
-            //}
+            itemList = dao.GetItemData();
+            itemGridView.DataSource = itemList;
         }
 
         private void buyOrder(String code, int count)

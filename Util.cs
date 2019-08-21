@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MySql.Data.MySqlClient;
 
 namespace WindowsFormsApp1
 {
@@ -29,5 +30,25 @@ namespace WindowsFormsApp1
             return date; ;
         }
 
+        public static Int32 GetNotNullInT(int idx, MySqlDataReader reader)
+        {
+            if (reader.IsDBNull(idx))
+            {
+                return 0;
+            } else
+            {
+                return reader.GetInt32(idx);
+            }
+        }
+        public static string GetNotNullString(int idx, MySqlDataReader reader)
+        {
+            if (reader.IsDBNull(idx))
+            {
+                return "";
+            } else
+            {
+                return reader.GetString(idx);
+            }
+        }
     }
 }

@@ -137,103 +137,103 @@ namespace WindowsFormsApp1
 
         public Boolean IsAvg5Rising(int olderOffset, int oldOffset, int current)
         {
-            if (current <= array.Length - 1 && current - olderOffset >= 0)
+            if (current <= array.Length - 1 && current + olderOffset >= 0)
             {
-                if (array[current - olderOffset] != null && array[current - oldOffset] != null)
+                if (array[current + olderOffset] != null && array[current + oldOffset] != null)
                 {
-                    if (array[current - olderOffset].avg5 != 0 && array[current - oldOffset].avg5 != 0)
+                    if (array[current + olderOffset].avg5 != 0 && array[current + oldOffset].avg5 != 0)
                     {
-                        return array[current - olderOffset].avg5 < array[current - oldOffset].avg5;
+                        return array[current + olderOffset].avg5 < array[current + oldOffset].avg5;
                     }
                 }
-                else if (array[current - olderOffset] == null || array[current - olderOffset].avg5 == 0)
+                else if (array[current + olderOffset] == null || array[current + olderOffset].avg5 == 0)
                 {
-                    //Console.WriteLine("[" + code + "][" + endDate + "] avg5 value is not set. index = " + (current - olderOffset));
+                    //Console.WriteLine("[" + code + "][" + endDate + "] avg5 value is not set. index = " + (current + olderOffset));
                 }
-                else if (array[current - oldOffset] != null || array[current - oldOffset].avg5 != 0)
+                else if (array[current + oldOffset] != null || array[current + oldOffset].avg5 != 0)
                 {
-                    //Console.WriteLine("[" + code + "][" + endDate + "] avg5 value is not set. index = " + (current - oldOffset));
+                    //Console.WriteLine("[" + code + "][" + endDate + "] avg5 value is not set. index = " + (current + oldOffset));
                 }
             } else
             {
-                Console.WriteLine("[" + code + "][" + endDate + "] Index out of bound. older index = " + (current - olderOffset) + ", current index = " + current);
+                Console.WriteLine("[" + code + "][" + endDate + "] Index out of bound. older index = " + (current + olderOffset) + ", current index = " + current);
             }
             return false;
         }
         private Boolean IsAvg5Falling(int olderOffset, int oldOffset, int current)
         {
-            if (current <= array.Length - 1 && current - olderOffset >= 0)
+            if (current <= array.Length - 1 && current + olderOffset >= 0)
             {
-                if (array[current - olderOffset] != null && array[current - oldOffset] != null)
+                if (array[current + olderOffset] != null && array[current + oldOffset] != null)
                 {
-                    if (array[current - olderOffset].avg5 != 0 && array[current - oldOffset].avg5 != 0)
+                    if (array[current + olderOffset].avg5 != 0 && array[current + oldOffset].avg5 != 0)
                     {
-                        return array[current - olderOffset].avg5 > array[current - oldOffset].avg5;
+                        return array[current + olderOffset].avg5 > array[current + oldOffset].avg5;
                     }
                 }
-                else if (array[current - olderOffset] == null || array[current - olderOffset].avg5 == 0)
+                else if (array[current + olderOffset] == null || array[current + olderOffset].avg5 == 0)
                 {
-                    //Console.WriteLine("[" + code + "][" + endDate + "] avg5 value is not set. index = " + (current - olderOffset));
+                    //Console.WriteLine("[" + code + "][" + endDate + "] avg5 value is not set. index = " + (current + olderOffset));
                 }
-                else if (array[current - oldOffset] != null || array[current - oldOffset].avg5 != 0)
+                else if (array[current + oldOffset] != null || array[current + oldOffset].avg5 != 0)
                 {
-                    //Console.WriteLine("[" + code + "][" + endDate + "] avg5 value is not set. index = " + (current - oldOffset));
+                    //Console.WriteLine("[" + code + "][" + endDate + "] avg5 value is not set. index = " + (current + oldOffset));
                 }
             } else
             {
-                Console.WriteLine("[" + code + "][" + endDate + "] Index out of bound. older index = " + (current - olderOffset) + ", current index = " + current);
+                Console.WriteLine("[" + code + "][" + endDate + "] Index out of bound. older index = " + (current + olderOffset) + ", current index = " + current);
             }
             return false;
         }
 
         public Boolean IsAvg20Rising(int olderOffset, int oldOffset, int current)
         {
-            if (current <= array.Length - 1 && current - olderOffset >= 0)
+            if (current <= array.Length - 1 && current + olderOffset >= 0)
             {
-                if (array[current - olderOffset] != null && array[current - oldOffset] != null)
+                if (array[current + olderOffset] != null && array[current + oldOffset] != null)
                 {
-                    if (array[current - olderOffset].avg20 != 0 && array[current - oldOffset].avg20 != 0)
+                    if (array[current + olderOffset].avg20 != 0 && array[current + oldOffset].avg20 != 0)
                     {
-                        return array[current - olderOffset].avg20 < array[current - oldOffset].avg20;
+                        return array[current + olderOffset].avg20 < array[current + oldOffset].avg20;
                     }
                 }
-                else if (array[current - olderOffset] == null || array[current - olderOffset].avg20 == 0)
+                else if (array[current + olderOffset] == null || array[current + olderOffset].avg20 == 0)
                 {
-                    //Console.WriteLine("[" + code + "][" + endDate + "] avg20 value is not set. index = " + (current - olderOffset));
+                    //Console.WriteLine("[" + code + "][" + endDate + "] avg20 value is not set. index = " + (current + olderOffset));
                 }
-                else if (array[current - oldOffset] != null || array[current - oldOffset].avg20 != 0)
+                else if (array[current + oldOffset] != null || array[current + oldOffset].avg20 != 0)
                 {
-                    //Console.WriteLine("[" + code + "][" + endDate + "] avg20 value is not set. index = " + (current - oldOffset));
+                    //Console.WriteLine("[" + code + "][" + endDate + "] avg20 value is not set. index = " + (current + oldOffset));
                 }
             } else
             {
-                Console.WriteLine("[" + code + "][" + endDate + "] Index out of bound. older index = " + (current - olderOffset) + ", current index = " + current);
+                Console.WriteLine("[" + code + "][" + endDate + "] Index out of bound. older index = " + (current + olderOffset) + ", current index = " + current);
             }
             return false;
         }
 
         public Boolean IsAvg120Rising(int olderOffset, int oldOffset, int current)
         {
-            if (current <= array.Length - 1 && current - olderOffset >= 0)
+            if (current <= array.Length - 1 && current + olderOffset >= 0)
             {
-                if (array[current - olderOffset] != null && array[current - oldOffset] != null)
+                if (array[current + olderOffset] != null && array[current + oldOffset] != null)
                 {
-                    if (array[current - olderOffset].avg120 != 0 && array[current - oldOffset].avg120 != 0)
+                    if (array[current + olderOffset].avg120 != 0 && array[current + oldOffset].avg120 != 0)
                     {
-                        return array[current - olderOffset].avg120 < array[current - oldOffset].avg120;
+                        return array[current + olderOffset].avg120 < array[current + oldOffset].avg120;
                     }
                 }
-                else if (array[current - olderOffset] == null || array[current - olderOffset].avg120 == 0)
+                else if (array[current + olderOffset] == null || array[current + olderOffset].avg120 == 0)
                 {
-                    //Console.WriteLine("[" + code + "][" + endDate + "] avg120 value is not set. index = " + (current - olderOffset));
+                    //Console.WriteLine("[" + code + "][" + endDate + "] avg120 value is not set. index = " + (current + olderOffset));
                 }
-                else if (array[current - oldOffset] != null || array[current - oldOffset].avg120 != 0)
+                else if (array[current + oldOffset] != null || array[current + oldOffset].avg120 != 0)
                 {
-                    //Console.WriteLine("[" + code + "][" + endDate + "] avg120 value is not set. index = " + (current - oldOffset));
+                    //Console.WriteLine("[" + code + "][" + endDate + "] avg120 value is not set. index = " + (current + oldOffset));
                 }
             } else
             {
-                Console.WriteLine("[" + code + "][" + endDate + "] Index out of bound. older index = " + (current - olderOffset) + ", current index = " + current);
+                Console.WriteLine("[" + code + "][" + endDate + "] Index out of bound. older index = " + (current + olderOffset) + ", current index = " + current);
             }
             return false;
         }
