@@ -21,8 +21,7 @@ namespace WindowsFormsApp1
         {
 
             // if dayCount == 1 then realtime
-            // use offset(120) to idx when set to threeArray
-
+            // use offset(129) to idx when set to threeArray
 
             Candle[] threeArray = new Candle[Constants.DAY_CANDLE_COUNT * dayCount];
             try
@@ -102,7 +101,14 @@ namespace WindowsFormsApp1
             return array;
         }
 
-        public void InsertItemData(ArrayList array)
+        public void InsertItemData(Item item)
+        {
+            List<Item> list = new List<Item>();
+            list.Add(item);
+            InsertItemData(list);
+        }
+
+        public void InsertItemData(List<Item> array)
         {
             try
             {
@@ -135,7 +141,7 @@ namespace WindowsFormsApp1
             }
         }
 
-        public void InsertDayData(ArrayList array)
+        public void InsertDayData(List<Candle> array)
         {
             try
             {
@@ -168,7 +174,6 @@ namespace WindowsFormsApp1
                 Console.Write(e);
             }
         }
-
 
         public void InsertThreeData(ArrayList array)
         {

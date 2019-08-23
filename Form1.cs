@@ -11,39 +11,64 @@ namespace WindowsFormsApp1
     public partial class Form1 : Form
     {
 
-        Boolean isAutoTrading = false;
-        private int _scrNum = 5000;
-        public string currentAccount = "";
-
         Dao dao = new Dao();
-        List<Item> itemList;
+
+        Control control = new Control();
+        ControlAccount account = new ControlAccount();
+        ControlOrder order = new ControlOrder();
+        ControlStock stock = new ControlStock();
 
         public Form1()
         {
             InitializeComponent();
-            this.refresh.Click += this.ItemRefreshClick;
+
             this.button2.Click += this.ThreeAddClick;
             this.button3.Click += this.ThreeGetClick;
             this.rebuild.Click += this.Rebuild;
             this.button4.Click += this.Simulate;
 
-            this.loginButton.Click += this.LoginClick;
-            this.logoutButton.Click += this.LogoutClick;
-            this.axKHOpenAPI1.OnEventConnect += this.axKHOpenAPI_OnEventConnect;
             this.axKHOpenAPI1.OnReceiveTrData += this.axKHOpenAPI_OnReceiveTrData;
             this.axKHOpenAPI1.OnReceiveRealData += this.axKHOpenAPI_OnReceiveRealData;
             this.axKHOpenAPI1.OnReceiveChejanData += this.axKHOpenApi_OnReceiveChejanData;
 
-            this.accountComboBox.SelectedIndexChanged += this.accountComboBox_SelectedIndexChanged;
+            this.loginButton.Click += account.LoginClick;
+            this.logoutButton.Click += account.LogoutClick;
+            this.axKHOpenAPI1.OnEventConnect += account.axKHOpenAPI_OnEventConnect;
+            this.accountComboBox.SelectedIndexChanged += account.accountComboBox_SelectedIndexChanged;
 
-            this.itemGridView.CellContentClick += this.itemGridView_CellContentClick;
+            this.refresh.Click += control.ItemRefreshClick;
+            this.itemGridView.CellContentClick += control.ItemGridView_CellContentClick;
 
             Util.GetDateNow(); // TODO 
 
-            this.textBox1.Text = Convert.ToString(20190814); // TODO
-            this.textBox2.Text = Convert.ToString(20190814); // TODO
+            this.simulateRadioButton.CheckedChanged += control.SimulateRadioButton_CheckedChanged;
+            this.realtimeRadioButton.CheckedChanged += control.RealtimeRadioButton_CheckedChanged;
+
+            // init control
+            control.console = this.console;
+            control.itemGridView = this.itemGridView;
+            control.accountComboBox = this.accountComboBox;
+            control.dao = this.dao;
+
+            // init account
+            account.axKHOpenAPI1 = this.axKHOpenAPI1;
+            account.control = this.control;
+
+            // init order
+            order.axKHOpenAPI1 = this.axKHOpenAPI1;
+            order.control = this.control;
+            order.account = this.account;
+
+
+            // init screen data
+            this.simulateRadioButton.Checked = true;
+            this.codeTextBox.Text = "0001";
+            this.startDateTextBox.Text = Convert.ToString(20190814);
+            this.endDateTextBox.Text = Convert.ToString(20190814);
+
 
         }
+
         private void ThreeAddClick(object sender, EventArgs e)
         {
             for (int i = 1; i <= 4; i++) {
@@ -103,8 +128,8 @@ namespace WindowsFormsApp1
         private void Simulate(object sender, EventArgs e)
         {
             string code = "0001";
-            int start = Int32.Parse(this.textBox1.Text);
-            int end = Int32.Parse(this.textBox2.Text);
+            int start = Int32.Parse(this.startDateTextBox.Text);
+            int end = Int32.Parse(this.endDateTextBox.Text);
             string rule = "IsAvg5Rising -1,0&IsAvg20Rising -2,0";
 
             Orders orders = new Orders();
@@ -141,8 +166,7 @@ namespace WindowsFormsApp1
 
         private void Rebuild(object sender, EventArgs e)
         {
-            this.UpdateAvgData("0001", Int32.Parse(this.textBox1.Text), Int32.Parse(this.textBox2.Text));
-            //this.UpdateAvgData("0001", Int32.Parse("20190814"), Int32.Parse("20190815"));
+            this.UpdateAvgData(this.codeTextBox.Text, Int32.Parse(this.startDateTextBox.Text), Int32.Parse(this.endDateTextBox.Text));
         }
 
         private void UpdateAvgData(string code, int startDate, int endDate)
@@ -150,8 +174,8 @@ namespace WindowsFormsApp1
             ThreeData d = GetThreeData(code, startDate, 2);
             if (d.array != null)
             {
+                control.Print("Updated average data from " + startDate + " to " + endDate, code);
                 dao.InsertThreeData(new ArrayList(d.array));
-                //Console.WriteLine(startDate + " - " + endDate); // TODO
                 if (d.endDate != 0 && d.startDate != d.endDate && d.endDate <= endDate)
                 {
                     UpdateAvgData(code, d.endDate, endDate);
@@ -171,65 +195,26 @@ namespace WindowsFormsApp1
             return d;
         }
 
-        private void accountComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ComboBox comboBox = (ComboBox)sender;
-            string selectedAccount = (string)comboBox.SelectedItem;
-            axKHOpenAPI1.SetInputValue("계좌번호", selectedAccount.Trim());
-            axKHOpenAPI1.SetInputValue("비밀번호", "");
-            axKHOpenAPI1.SetInputValue("상장폐지조회구분", "0");
-            axKHOpenAPI1.SetInputValue("비밀번호입력매체구분", "00");
 
-            int result = axKHOpenAPI1.CommRqData("계좌평가현황요청", "OPW00004", 0, "6001");
+        private void InquireDayInfo(object sender, EventArgs e)
+        {
+            string code = this.codeTextBox.Text.Trim();
+            string endDate = this.endDateTextBox.Text.Trim();
+            stock.InquireDayInfo(code, endDate);
         }
 
-        private void itemGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            var sendGrid = (DataGridView)sender;
-            if (sendGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn && e.RowIndex >= 0)
-            {
-                string targetValue = this.itemGridView.Rows[e.RowIndex].Cells[3].Value.ToString();
-                Console.WriteLine(targetValue); // TODO
-                // TODO
-            }
-        }
-
-        private void InquireCodeInfo()
-        {
-            axKHOpenAPI1.SetInputValue("종목코드", this.codeTextBox.Text.Trim());
-            axKHOpenAPI1.SetInputValue("기준일자", this.dateTextBox.Text.Trim());
-            axKHOpenAPI1.SetInputValue("수정주가구분", "1");
-
-            int nRet;
-            if (true) // TODO
-            {
-                // 신규조회
-                nRet = axKHOpenAPI1.CommRqData("주식일봉차트조회", "OPT10081", 0, "1002");
-            }
-            else
-            {
-                // 연속조회
-                nRet = axKHOpenAPI1.CommRqData("주식일봉차트조회", "OPT10081", 2, "1002");
-            }
-
-            if (nRet == 0)
-            {
-                this.console.Items.Add("주식정보요청 성공");
-            } else
-            {
-                this.console.Items.Add("주식정보요청 실패");
-            }
-        }
 
         private void axKHOpenAPI_OnReceiveTrData(object sender, AxKHOpenAPILib._DKHOpenAPIEvents_OnReceiveTrDataEvent e)
         {
             if (e.sRQName == "주식일봉차트조회")
             {
                 int nCnt = axKHOpenAPI1.GetRepeatCnt(e.sTrCode, e.sRQName);
+
+                List<Candle> list = new List<Candle>();
                 for (int i = 0; i < nCnt; i++)
                 {
+                    string code = axKHOpenAPI1.GetCommData(e.sTrCode, e.sRQName, 0, "종목코드").Trim();
                     String date = axKHOpenAPI1.GetCommData(e.sTrCode, e.sRQName, 0, "일자").Trim();
-                    String code = axKHOpenAPI1.GetCommData(e.sTrCode, e.sRQName, 0, "종목코드").Trim();
                     String price = axKHOpenAPI1.GetCommData(e.sTrCode, e.sRQName, 0, "현재가").Trim();
                     String volume = axKHOpenAPI1.GetCommData(e.sTrCode, e.sRQName, 0, "거래량").Trim();
                     String startPrice = axKHOpenAPI1.GetCommData(e.sTrCode, e.sRQName, 0, "시가").Trim();
@@ -276,7 +261,7 @@ namespace WindowsFormsApp1
                     // TODO
                     if (수익률 > 1)
                     {
-                        sellOrder(종목코드, 잔고수량);
+                        order.Sell(종목코드, 잔고수량);
                     }
                 }
 
@@ -315,96 +300,6 @@ namespace WindowsFormsApp1
             }
         }
 
-
-        private void LoginClick(object sender, EventArgs e)
-        {
-            if (axKHOpenAPI1.CommConnect() != 0)
-            {
-                this.console.Items.Add("로그인 실패");
-            }
-            else
-            {
-                this.console.Items.Add("로그인 시작");
-            }
-        }
-
-        private void axKHOpenAPI_OnEventConnect(object sender, AxKHOpenAPILib._DKHOpenAPIEvents_OnEventConnectEvent e)
-        {
-            if (e.nErrCode == 0)
-            {
-                this.console.Items.Add("로그인 성공");
-                int connectState = axKHOpenAPI1.GetConnectState();
-                if (connectState == 1)
-                {
-                    this.console.Items.Add("접속상태:연결중");
-                }
-                else
-                {
-                    this.console.Items.Add("접속상태:미연결, status:" + connectState);
-                }
-
-                GetLoginInfo();
-
-            } else
-            {
-                this.console.Items.Add("로그인 실패");
-            }
-        }
-
-        private void LogoutClick(object sender, EventArgs e)
-        {
-            axKHOpenAPI1.CommTerminate();
-            this.console.Items.Add("로그아웃");
-        }
-
-        private void GetLoginInfo()
-        {
-            this.idLabel.Text += axKHOpenAPI1.GetLoginInfo("USER_ID");
-            this.nameLabel.Text += axKHOpenAPI1.GetLoginInfo("USER_NAME");
-
-            string[] accountArray = axKHOpenAPI1.GetLoginInfo("ACCNO").Split(';');
-            this.accountComboBox.Items.AddRange(accountArray);
-            this.accountComboBox.SelectedIndex = 0;
-            if (accountComboBox.SelectedItem.ToString().Length > 0)
-            {
-                currentAccount = accountComboBox.SelectedItem.ToString();
-                requestAccountInfo();
-                requestProfitInfo();
-            }
-        }
-
-        private void ItemRefreshClick(object sender, EventArgs e)
-        {
-            itemList = dao.GetItemData();
-            itemGridView.DataSource = itemList;
-        }
-
-        private void buyOrder(String code, int count)
-        {
-            if (isAutoTrading)
-            {
-                //계좌 선택 여부 확인
-                if (accountComboBox.Text.Length != 10)
-                {
-                    System.Windows.Forms.MessageBox.Show("계좌를 선택해주세요.");
-                    return;
-                }
-                else
-                {
-                    //주문하기
-                    int lRet = axKHOpenAPI1.SendOrder("주식주문", "7001", this.accountComboBox.Text.Trim(), 1, code, count, 0, "03", "");
-
-                    if (lRet == 0)
-                    {
-                        Console.WriteLine("주문이 전송 되었습니다");
-                    }
-                    else
-                    {
-                        Console.WriteLine("주문이 전송 실패 하였습니다.");
-                    }
-                }
-            }
-        }
         private void axKHOpenApi_OnReceiveChejanData(object sender, AxKHOpenAPILib._DKHOpenAPIEvents_OnReceiveChejanDataEvent e)
         {
             if (e.sGubun == "0")
@@ -418,85 +313,12 @@ namespace WindowsFormsApp1
 
                 if (체결량 > 0)
                 {
-                    requestAccountInfo();
-                    requestProfitInfo();
-                }
-            }
-        }
-        private void sellOrder(String code, int count)
-        {
-            if (isAutoTrading)
-            {
-                //계좌 선택 여부 확인
-                if (accountComboBox.Text.Length != 10)
-                {
-                    System.Windows.Forms.MessageBox.Show("계좌를 선택해주세요.");
-                    return;
-                }
-                else
-                {
-                    //주문하기
-                    int lRet = axKHOpenAPI1.SendOrder("주식주문", "7001", this.accountComboBox.Text.Trim(), 2, code, count, 0, "03", "");
-
-                    if (lRet == 0)
-                    {
-                        Console.WriteLine("주문이 전송 되었습니다");
-                    }
-                    else
-                    {
-                        Console.WriteLine("주문이 전송 실패 하였습니다.");
-                    }
+                    account.SendRequestAccountInfo();
+                    account.SendRequestProfitInfo();
                 }
             }
         }
 
-        private void requestAccountInfo()
-        {
-            axKHOpenAPI1.SetInputValue("계좌번호", currentAccount);
-            axKHOpenAPI1.SetInputValue("비밀번호", "");
-            axKHOpenAPI1.SetInputValue("비밀번호입력매체구분", "00");
-
-            int result = axKHOpenAPI1.CommRqData("계좌평가내역요청", "OPW00018", 0, GetScrNum());
-        }
-        private void requestProfitInfo()
-        {
-            axKHOpenAPI1.SetInputValue("계좌번호", currentAccount);
-            axKHOpenAPI1.SetInputValue("시작일자", DateTime.Now.ToString("yyyyMMdd"));
-            axKHOpenAPI1.SetInputValue("종료일자", DateTime.Now.ToString("yyyyMMdd"));
-
-            int result = axKHOpenAPI1.CommRqData("일자별실현손익요청", "OPT10074", 0, GetScrNum());
-        }
-
-        private string GetScrNum()
-        {
-            if (_scrNum < 9999)
-                _scrNum++;
-            else
-                _scrNum = 5000;
-            return _scrNum.ToString();
-        }
     }
 
-        class StockItemInfo
-    {
-        public String 종목명 { get; set; }
-        public String 현재가 { get; set; }
-        public String 전일대비 { get; set; }
-        public String 등락률 { get; set; }
-        public String 거래량 { get; set; }
-        public String 시가 { get; set; }
-        public String 고가 { get; set; }
-        public String 저가 { get; set; }
-    }
-
-    class StockBalance
-    {
-        public String 종목명 { get; set; }
-        public String 종목코드 { get; set; }
-        public String 잔고수량 { get; set; }
-        public String 매입금액 { get; set; }
-        public String 평가금액 { get; set; }
-        public String 손익금액 { get; set; }
-        public String 수익률 { get; set; }
-    }
 }

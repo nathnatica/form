@@ -50,5 +50,15 @@ namespace WindowsFormsApp1
                 return reader.GetString(idx);
             }
         }
+
+        private static int _scrNum = 5000;
+        public static string GetScrNum()
+        {
+            if (_scrNum < 9999)
+                _scrNum++;
+            else
+                _scrNum = 5000;
+            return _scrNum.ToString();
+        }
     }
 }

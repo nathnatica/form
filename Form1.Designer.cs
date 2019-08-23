@@ -33,20 +33,16 @@
             this.refresh = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.startDateTextBox = new System.Windows.Forms.TextBox();
+            this.endDateTextBox = new System.Windows.Forms.TextBox();
             this.rebuild = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.loginButton = new System.Windows.Forms.Button();
             this.console = new System.Windows.Forms.ListBox();
             this.logoutButton = new System.Windows.Forms.Button();
-            this.nameLabel = new System.Windows.Forms.Label();
-            this.idLabel = new System.Windows.Forms.Label();
             this.accountComboBox = new System.Windows.Forms.ComboBox();
             this.codeTextBox = new System.Windows.Forms.TextBox();
             this.codeLabel = new System.Windows.Forms.Label();
-            this.dataLabel = new System.Windows.Forms.Label();
-            this.dateTextBox = new System.Windows.Forms.TextBox();
             this.balanceGridView = new System.Windows.Forms.DataGridView();
             this.종목명 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.종목코드 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -78,16 +74,22 @@
             this.opt2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.opt3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.update = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.simulateRadioButton = new System.Windows.Forms.RadioButton();
+            this.realtimeRadioButton = new System.Windows.Forms.RadioButton();
+            this.modePanel = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             inquireButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.balanceGridView)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.axKHOpenAPI1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.itemGridView)).BeginInit();
+            this.modePanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // inquireButton
             // 
-            inquireButton.Location = new System.Drawing.Point(384, 19);
+            inquireButton.Location = new System.Drawing.Point(292, 20);
             inquireButton.Margin = new System.Windows.Forms.Padding(2);
             inquireButton.Name = "inquireButton";
             inquireButton.Size = new System.Drawing.Size(57, 20);
@@ -107,7 +109,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(1003, 322);
+            this.button2.Location = new System.Drawing.Point(1009, 323);
             this.button2.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(49, 32);
@@ -117,7 +119,7 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(1003, 276);
+            this.button3.Location = new System.Drawing.Point(923, 323);
             this.button3.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(49, 32);
@@ -125,21 +127,21 @@
             this.button3.Text = "get";
             this.button3.UseVisualStyleBackColor = true;
             // 
-            // textBox1
+            // startDateTextBox
             // 
-            this.textBox1.Location = new System.Drawing.Point(1062, 276);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(48, 19);
-            this.textBox1.TabIndex = 3;
+            this.startDateTextBox.Location = new System.Drawing.Point(1034, 275);
+            this.startDateTextBox.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.startDateTextBox.Name = "startDateTextBox";
+            this.startDateTextBox.Size = new System.Drawing.Size(69, 19);
+            this.startDateTextBox.TabIndex = 3;
             // 
-            // textBox2
+            // endDateTextBox
             // 
-            this.textBox2.Location = new System.Drawing.Point(1062, 296);
-            this.textBox2.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(48, 19);
-            this.textBox2.TabIndex = 4;
+            this.endDateTextBox.Location = new System.Drawing.Point(1034, 295);
+            this.endDateTextBox.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.endDateTextBox.Name = "endDateTextBox";
+            this.endDateTextBox.Size = new System.Drawing.Size(69, 19);
+            this.endDateTextBox.TabIndex = 4;
             // 
             // rebuild
             // 
@@ -152,7 +154,7 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(888, 305);
+            this.button4.Location = new System.Drawing.Point(844, 306);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(75, 49);
             this.button4.TabIndex = 6;
@@ -189,33 +191,13 @@
             this.logoutButton.Text = "logout";
             this.logoutButton.UseVisualStyleBackColor = true;
             // 
-            // nameLabel
-            // 
-            this.nameLabel.AutoSize = true;
-            this.nameLabel.Location = new System.Drawing.Point(19, 124);
-            this.nameLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.nameLabel.Name = "nameLabel";
-            this.nameLabel.Size = new System.Drawing.Size(34, 12);
-            this.nameLabel.TabIndex = 11;
-            this.nameLabel.Text = "Name";
-            // 
-            // idLabel
-            // 
-            this.idLabel.AutoSize = true;
-            this.idLabel.Location = new System.Drawing.Point(19, 145);
-            this.idLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.idLabel.Name = "idLabel";
-            this.idLabel.Size = new System.Drawing.Size(16, 12);
-            this.idLabel.TabIndex = 12;
-            this.idLabel.Text = "ID";
-            // 
             // accountComboBox
             // 
             this.accountComboBox.FormattingEnabled = true;
-            this.accountComboBox.Location = new System.Drawing.Point(21, 167);
+            this.accountComboBox.Location = new System.Drawing.Point(21, 81);
             this.accountComboBox.Margin = new System.Windows.Forms.Padding(2);
             this.accountComboBox.Name = "accountComboBox";
-            this.accountComboBox.Size = new System.Drawing.Size(74, 20);
+            this.accountComboBox.Size = new System.Drawing.Size(100, 20);
             this.accountComboBox.TabIndex = 13;
             // 
             // codeTextBox
@@ -236,25 +218,6 @@
             this.codeLabel.Size = new System.Drawing.Size(31, 12);
             this.codeLabel.TabIndex = 15;
             this.codeLabel.Text = "Code";
-            // 
-            // dataLabel
-            // 
-            this.dataLabel.AutoSize = true;
-            this.dataLabel.Location = new System.Drawing.Point(291, 23);
-            this.dataLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.dataLabel.Name = "dataLabel";
-            this.dataLabel.Size = new System.Drawing.Size(29, 12);
-            this.dataLabel.TabIndex = 17;
-            this.dataLabel.Text = "Date";
-            // 
-            // dateTextBox
-            // 
-            this.dateTextBox.Location = new System.Drawing.Point(321, 21);
-            this.dateTextBox.Margin = new System.Windows.Forms.Padding(2);
-            this.dateTextBox.MaxLength = 8;
-            this.dateTextBox.Name = "dateTextBox";
-            this.dateTextBox.Size = new System.Drawing.Size(61, 19);
-            this.dateTextBox.TabIndex = 18;
             // 
             // balanceGridView
             // 
@@ -333,7 +296,7 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 52.68456F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 47.31544F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 86F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 72F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 75F));
             this.tableLayoutPanel1.Controls.Add(this.realProfitTextView, 3, 2);
             this.tableLayoutPanel1.Controls.Add(this.totalProfitRateTextView, 3, 1);
             this.tableLayoutPanel1.Controls.Add(this.totalEstimateTextView, 1, 1);
@@ -359,7 +322,7 @@
             // realProfitTextView
             // 
             this.realProfitTextView.AutoSize = true;
-            this.realProfitTextView.Location = new System.Drawing.Point(238, 52);
+            this.realProfitTextView.Location = new System.Drawing.Point(235, 52);
             this.realProfitTextView.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.realProfitTextView.Name = "realProfitTextView";
             this.realProfitTextView.Size = new System.Drawing.Size(0, 12);
@@ -368,7 +331,7 @@
             // totalProfitRateTextView
             // 
             this.totalProfitRateTextView.AutoSize = true;
-            this.totalProfitRateTextView.Location = new System.Drawing.Point(238, 25);
+            this.totalProfitRateTextView.Location = new System.Drawing.Point(235, 25);
             this.totalProfitRateTextView.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.totalProfitRateTextView.Name = "totalProfitRateTextView";
             this.totalProfitRateTextView.Size = new System.Drawing.Size(0, 12);
@@ -377,7 +340,7 @@
             // totalEstimateTextView
             // 
             this.totalEstimateTextView.AutoSize = true;
-            this.totalEstimateTextView.Location = new System.Drawing.Point(81, 25);
+            this.totalEstimateTextView.Location = new System.Drawing.Point(79, 25);
             this.totalEstimateTextView.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.totalEstimateTextView.Name = "totalEstimateTextView";
             this.totalEstimateTextView.Size = new System.Drawing.Size(0, 12);
@@ -386,7 +349,7 @@
             // totalProfitTextView
             // 
             this.totalProfitTextView.AutoSize = true;
-            this.totalProfitTextView.Location = new System.Drawing.Point(238, 0);
+            this.totalProfitTextView.Location = new System.Drawing.Point(235, 0);
             this.totalProfitTextView.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.totalProfitTextView.Name = "totalProfitTextView";
             this.totalProfitTextView.Size = new System.Drawing.Size(0, 12);
@@ -395,7 +358,7 @@
             // totalBuyTextView
             // 
             this.totalBuyTextView.AutoSize = true;
-            this.totalBuyTextView.Location = new System.Drawing.Point(81, 0);
+            this.totalBuyTextView.Location = new System.Drawing.Point(79, 0);
             this.totalBuyTextView.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.totalBuyTextView.Name = "totalBuyTextView";
             this.totalBuyTextView.Size = new System.Drawing.Size(0, 12);
@@ -404,7 +367,7 @@
             // RealProfitLabel
             // 
             this.RealProfitLabel.AutoSize = true;
-            this.RealProfitLabel.Location = new System.Drawing.Point(152, 52);
+            this.RealProfitLabel.Location = new System.Drawing.Point(149, 52);
             this.RealProfitLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.RealProfitLabel.Name = "RealProfitLabel";
             this.RealProfitLabel.Size = new System.Drawing.Size(56, 12);
@@ -414,7 +377,7 @@
             // totalProfitRateLabel
             // 
             this.totalProfitRateLabel.AutoSize = true;
-            this.totalProfitRateLabel.Location = new System.Drawing.Point(152, 25);
+            this.totalProfitRateLabel.Location = new System.Drawing.Point(149, 25);
             this.totalProfitRateLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.totalProfitRateLabel.Name = "totalProfitRateLabel";
             this.totalProfitRateLabel.Size = new System.Drawing.Size(77, 24);
@@ -434,7 +397,7 @@
             // totalProfitLabel
             // 
             this.totalProfitLabel.AutoSize = true;
-            this.totalProfitLabel.Location = new System.Drawing.Point(152, 0);
+            this.totalProfitLabel.Location = new System.Drawing.Point(149, 0);
             this.totalProfitLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.totalProfitLabel.Name = "totalProfitLabel";
             this.totalProfitLabel.Size = new System.Drawing.Size(59, 12);
@@ -557,30 +520,78 @@
             this.update.Text = "update";
             this.update.Width = 80;
             // 
+            // simulateRadioButton
+            // 
+            this.simulateRadioButton.AutoSize = true;
+            this.simulateRadioButton.Location = new System.Drawing.Point(9, 12);
+            this.simulateRadioButton.Name = "simulateRadioButton";
+            this.simulateRadioButton.Size = new System.Drawing.Size(67, 16);
+            this.simulateRadioButton.TabIndex = 23;
+            this.simulateRadioButton.TabStop = true;
+            this.simulateRadioButton.Text = "Simulate";
+            this.simulateRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // realtimeRadioButton
+            // 
+            this.realtimeRadioButton.AutoSize = true;
+            this.realtimeRadioButton.Location = new System.Drawing.Point(9, 33);
+            this.realtimeRadioButton.Name = "realtimeRadioButton";
+            this.realtimeRadioButton.Size = new System.Drawing.Size(68, 16);
+            this.realtimeRadioButton.TabIndex = 24;
+            this.realtimeRadioButton.TabStop = true;
+            this.realtimeRadioButton.Text = "Realtime";
+            this.realtimeRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // modePanel
+            // 
+            this.modePanel.Controls.Add(this.simulateRadioButton);
+            this.modePanel.Controls.Add(this.realtimeRadioButton);
+            this.modePanel.Location = new System.Drawing.Point(1026, 3);
+            this.modePanel.Name = "modePanel";
+            this.modePanel.Size = new System.Drawing.Size(87, 59);
+            this.modePanel.TabIndex = 25;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(1000, 278);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(30, 12);
+            this.label1.TabIndex = 26;
+            this.label1.Text = "Start";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(1000, 298);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(24, 12);
+            this.label2.TabIndex = 27;
+            this.label2.Text = "End";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1122, 551);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.modePanel);
             this.Controls.Add(this.itemGridView);
             this.Controls.Add(this.axKHOpenAPI1);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.balanceGridView);
-            this.Controls.Add(this.dateTextBox);
-            this.Controls.Add(this.dataLabel);
             this.Controls.Add(inquireButton);
             this.Controls.Add(this.codeLabel);
             this.Controls.Add(this.codeTextBox);
             this.Controls.Add(this.accountComboBox);
-            this.Controls.Add(this.idLabel);
-            this.Controls.Add(this.nameLabel);
             this.Controls.Add(this.logoutButton);
             this.Controls.Add(this.console);
             this.Controls.Add(this.loginButton);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.rebuild);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.endDateTextBox);
+            this.Controls.Add(this.startDateTextBox);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.refresh);
@@ -592,6 +603,8 @@
             this.tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.axKHOpenAPI1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.itemGridView)).EndInit();
+            this.modePanel.ResumeLayout(false);
+            this.modePanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -602,20 +615,16 @@
         private System.Windows.Forms.Button refresh;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox startDateTextBox;
+        private System.Windows.Forms.TextBox endDateTextBox;
         private System.Windows.Forms.Button rebuild;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button loginButton;
         private System.Windows.Forms.ListBox console;
         private System.Windows.Forms.Button logoutButton;
-        private System.Windows.Forms.Label idLabel;
         private System.Windows.Forms.ComboBox accountComboBox;
-        private System.Windows.Forms.Label nameLabel;
         private System.Windows.Forms.TextBox codeTextBox;
         private System.Windows.Forms.Label codeLabel;
-        private System.Windows.Forms.Label dataLabel;
-        private System.Windows.Forms.TextBox dateTextBox;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Label totalBuyLabel;
         private System.Windows.Forms.Label totalProfitLabel;
@@ -647,6 +656,11 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn opt2;
         private System.Windows.Forms.DataGridViewTextBoxColumn opt3;
         private System.Windows.Forms.DataGridViewButtonColumn update;
+        private System.Windows.Forms.RadioButton simulateRadioButton;
+        private System.Windows.Forms.RadioButton realtimeRadioButton;
+        private System.Windows.Forms.Panel modePanel;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
     }
 }
 
