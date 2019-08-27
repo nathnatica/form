@@ -59,121 +59,128 @@ https://wd501.tistory.com/39
 
 https://dennisbot.tistory.com/16?category=637468
 
---------------- insert
 
-    using MySql.Data.MySqlClient;  //Its for MySQL  
+--------------------
+과거 분봉을 가져오는 것을 어떻게 할지(기준일 지정으로 가능한지)
+아이템에 타겟, 스테이터스를 가질것
+아이템에 일봉시작, 일봉 끝, 분봉시작(일), 분봉끝(일), 일봉이평작성시작(일), 일봉이평작성끝(일), 분봉이평작성시작(일), 분봉이평작성끝(일) 가질 것
+
+타이머 만들기
+실시간일 경우에 실시간 반환
+시뮬일 경우에 지정 시간에서 시작해서 잡리스트에 아무것도 없을 경우에 +3분할 것
+잡리스트에 타이머시간보다 이후의 잡이 있을 경우 순차적으로 실시 
+
+개장일리스트 만들기
+
+잡리스트
+로드 아이템
+겟아이템 api
+로드 일봉
+겟일봉
+로드 분봉
+겟분봉
+체크
+
+시작이 눌리면 코드 입력으로부터 받은 코드로 아이템이 존재하는지 확인
+	없을 경우에 api로 가져온다(잡 등록)
+	있을 경우에는 시작일부터 종료일의 일봉, 분봉데이터를 디비에서 가져온다
 	
-    private void button1_Click(object sender, EventArgs e)  
-    {  
-        try  
-       {  
-                //This is my connection string i have assigned the database file address path  
-                string MyConnection2 = "datasource=localhost;port=3306;username=root;password=root";  
-                //This is my insert query in which i am taking input from the user through windows forms  
-                string Query = "insert into student.studentinfo(idStudentInfo,Name,Father_Name,Age,Semester) values('" +this.IdTextBox.Text+ "','" +this.NameTextBox.Text+ "','" +this.FnameTextBox.Text+ "','" +this.AgeTextBox.Text+ "','" +this.SemesterTextBox.Text+ "');";  
-                //This is  MySqlConnection here i have created the object and pass my connection string.  
-                MySqlConnection MyConn2 = new MySqlConnection(MyConnection2);  
-                //This is command class which will handle the query and connection object.  
-                MySqlCommand MyCommand2 = new MySqlCommand(Query, MyConn2);  
-                MySqlDataReader MyReader2;  
-                MyConn2.Open();  
-                MyReader2 = MyCommand2.ExecuteReader();     // Here our query will be executed and data saved into the database.  
-                MessageBox.Show("Save Data");  
-                while (MyReader2.Read())  
-                {                     
-                }  
-                MyConn2.Close();  
-            }  
-            catch (Exception ex)  
-            {   
-                MessageBox.Show(ex.Message);  
-          }  
-    }  
+	아이템 일봉시작이 없으면 최신일부터 200일 정도의 데이터를 디비에 저장
+	아이템 일봉시작, 일봉끝갱신
+	아이템일봉끝 < 전일입력이면 데이터를 받아서 아이템일봉끝부터 전일입력까지의 데이터를 디비에 넣어줄것
+	아이템 일봉끝갱신
 
----------------- update
+	아이템 일봉이평작성시작(일)이 없으면 일봉처음부터 240개를 취득해서
+	이평데이터를 작성 후 갱신해 준다
+	일봉이평작성시작(일), 일봉이평작성끝(일)을 갱신(5,20,120이평정보가 다 있는 날짜를 적어준다)
+	일봉이평작성끝(일) < 전일입력이면 일봉이평작성끝(일) 보다 이전120일부터 전일입력까지의 데이터를 취득해서
+	이평데이터를 작성 후 갱신해 준다
+	(갱신시에 처음 취득시의 데이터가 5,20,120이평정보가 다 있는 경우에는 갱신 스킵)
 
-    private void button2_Click(object sender, EventArgs e)  
-    {  
-        try  
-        {  
-            //This is my connection string i have assigned the database file address path  
-            string MyConnection2 = "datasource=localhost;port=3307;username=root;password=root";  
-            //This is my update query in which i am taking input from the user through windows forms and update the record.  
-            string Query = "update student.studentinfo set idStudentInfo='" + this.IdTextBox.Text + "',Name='" + this.NameTextBox.Text + "',Father_Name='" + this.FnameTextBox.Text + "',Age='" + this.AgeTextBox.Text + "',Semester='" + this.SemesterTextBox.Text + "' where idStudentInfo='" + this.IdTextBox.Text + "';";  
-            //This is  MySqlConnection here i have created the object and pass my connection string.  
-            MySqlConnection MyConn2 = new MySqlConnection(MyConnection2);  
-            MySqlCommand MyCommand2 = new MySqlCommand(Query, MyConn2);  
-            MySqlDataReader MyReader2;  
-            MyConn2.Open();  
-            MyReader2 = MyCommand2.ExecuteReader();  
-            MessageBox.Show("Data Updated");  
-            while (MyReader2.Read())  
-            {  
-            }  
-            MyConn2.Close();//Connection closed here  
-        }  
-        catch (Exception ex)  
-        {   
-            MessageBox.Show(ex.Message);  
-        }  
-    }  
 
--------------- delete
+	아이템 분봉시작 없을 경우에는 api로 가져온다(잡 등록)
+	api로 6일분의 데이터를 디비에 넣어준다
+	아이템 분봉시작 분봉끝 갱신
+	아이템 분봉끝 < 전일입력이면 데이터를 받아서 분봉끝부터 전일입력까지의 데이터(연속조회?가 필요할 것)를 디비에 넣어줄것
+	아이템 분봉끝 갱신
 
-    private void button3_Click(object sender, EventArgs e)  
-    {  
-        try  
-        {  
-            string MyConnection2 = "datasource=localhost;port=3307;username=root;password=root";  
-            string Query = "delete from student.studentinfo where idStudentInfo='" + this.IdTextBox.Text + "';";  
-            MySqlConnection MyConn2 = new MySqlConnection(MyConnection2);  
-            MySqlCommand MyCommand2 = new MySqlCommand(Query, MyConn2);  
-            MySqlDataReader MyReader2;  
-            MyConn2.Open();  
-             MyReader2 = MyCommand2.ExecuteReader();  
-             MessageBox.Show("Data Deleted");  
-             while (MyReader2.Read())  
-             {  
-             }  
-             MyConn2.Close();  
-        }  
-        catch (Exception ex)  
-        {  
-            MessageBox.Show(ex.Message);  
-        }  
-    }  
+	전일입력-n일부터 전일까지의 일봉, 전일, 당일(전일+1)의 분봉을 가져와서 체크 대상으로 활용한다
+	실시간:
+	타이머 인터벌 후 실시간 3분봉데이터를 가져오고 메모리상의 데이터를 갱신한 후 매수매도체크를 하고
+	대상이 아닐경우 다음인터벌에 다시 실시간 3분봉데이터를 가져오도록 잡등록
+	시뮬:
+	타이머를 당일9시로 셋팅하여 시작
+	타이머 인터벌 후(3분씩 추가한다 9:01, 9:04 이런 식으로) 당일 분봉의 타이머 시간 분의 데이터를 대상으로 매수매도체크를 하고
+	대상이 아닐경우 다음인터벌에 다시 실시간 3분봉데이터를 가져오도록 잡등록
+	
 
--------------- display
+	체크시작일부터 체크종료일까지의 날짜에 대해서 루프
+		코드 아이템분 루프
+			여러 룰 분 루프
+				체크할 것
 
-    private void button4_Click(object sender, EventArgs e)  
-    {  
-        try  
-        {  
-            string MyConnection2 = "datasource=localhost;port=3307;username=root;password=root";
-            //Display query
-            string Query = "select * from student.studentinfo;";
-            MySqlConnection MyConn2 = new MySqlConnection(MyConnection2);
-            MySqlCommand MyCommand2 = new MySqlCommand(Query, MyConn2);
-            //  MyConn2.Open();
-           //For offline connection we weill use  MySqlDataAdapter class.
-           MySqlDataAdapter MyAdapter = new MySqlDataAdapter();
-           MyAdapter.SelectCommand = MyCommand2;
-           DataTable dTable = new DataTable();
-           MyAdapter.Fill(dTable);  
-           dataGridView1.DataSource = dTable; // here i have assign dTable object to the dataGridView1 object to display data.               
-            // MyConn2.Close();  
-       }  
-      catch (Exception ex)  
-      {   
-            MessageBox.Show(ex.Message);  
-       }  
-    }  
+				
+	
+	
+관심종목을 가져와서 디비에 저장
+	저정된 아이템이 타겟일 경우 최신 일봉, 분봉데이터가 없을 경우 가져올 것(잡에 등록)
+	디비의 일봉 분봉데이터를 보고 없을 경우에 가져올 것(잡에 등록)
+	일봉의 경우 최근 100일 정도분만, 3분봉의 경우는 일단 볼 것
+	가져온 데이터에 관해 이평선 정보 만들어 줄 것(잡에 등록)
+	
 
----------------- preparedstatement
 
-	cmd = new MySqlCommand("select * from a where a=@val1 and b=@val2", MyConn2);
-	cmd.Parameters.AddWithValue("@val1", tboxUserName.Text);
-	cmd.Parameters.AddWithValue("@val2", tboxPW.Text);
+타이머 시작, 스탑, 종료 버튼을 만들것
+	타이머 종료시 남아있는 잡을 모두 종료
+	시뮬레이션의 경우에는 그냥 종료(타이머가 필요 없을지도)
+	실시간의 경우에는 매수 중인 것을 매도하고 종료
+
+
+타이머가 필요한테 api에 날리는 것은 4초에 한번 날리는 것으로
+	데이터를 받아오면 디비에 넣어주고
+	이평데이터를 갱신
+	실시간 장중에는 체크로직을 돌린다
+	장중이 아닐 경우에는 데이터 갱신만 한다.
+	갱신후 잡에서 날려줄 것
+
+
+잡 리스트를 만들것
+	화면갱신 로직을 만들것
+	다음 실시 시간
+	구분 - api콜인지 아니면 다른 것인지
+	잡 내용
+
+
+전일 입력,오늘 입력을 받아서
+	전일 입력있고 오늘 입력이 없으면 실시간
+입력 대상코드에 관해서 루프를 돌면서 확인한다.
+	대상코드가 없으면 디비의 대상 코드리스트에 관해 실시
+
+일봉정보에 전일-20에서 전일+1분의 일봉정보를 취득
+	전일+1일분이 없으면 실시간
+	전일-20이 없거나 부족하면 데이터가 부족하므로 처리를 스킵하고 다음으로 넘어가거나
+	api로 데이터를 가져와서 디비에 넣어주고 처리할 것
+
+오늘입력의 분봉정보를 디비에서 가져온다
+	없을 경우 api로 가져온다(슬레이브를 생성해서 전용 크롤러로 만들것인지 검토)
+	실시간의 경우 지금 시간이 아니면 최신 정보를 가져온다
+
+룰에 따라 체크로직을 진행
+	실시간일 경우 현재 시간의 데이터만 체크
+	실시간이 아닐 경우 체크대상일의 처음부터 체크 시작
+
+체크 결과 매수 대상의 경우 매수 진행
+	실시간의 경우에 다시 실시간 정보를 체크할 대상으로 이동
+	대상이 아닐경우 다음 타임에 다시 확인
+	
+매수 상태의 경우 매도 체크를 실시
+	실시간의 경우에 다시 실시간 정보를 체크할 대상으로 이동	
+	대상이 아닐경우 다음 타임에 다시 확인
+	
+--------------------
+
+SortedList l = new SortedList();
+
 
 --------------------
 3min
@@ -223,13 +230,6 @@ array의 가장 뒤 부터 data를 등록하고 이미 등록된 레코드의 �
 
 -------------------
  
- string[] lines = File.ReadAllLines("C:\\input.txt");
- foreach (string line in lines) {
-	string[] sp = line.Split(",");
-
- }
- 
--------------------
  
  String.IsNullOrEmpty();
  
