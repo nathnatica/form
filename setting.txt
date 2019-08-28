@@ -62,15 +62,19 @@ https://dennisbot.tistory.com/16?category=637468
 
 --------------------
 과거 분봉을 가져오는 것을 어떻게 할지(기준일 지정으로 가능한지)
-아이템에 타겟, 스테이터스를 가질것
+아이템에 타겟, 스테이터스, 구분(코스피/코스닥)를 가질것
 아이템에 일봉시작, 일봉 끝, 분봉시작(일), 분봉끝(일), 일봉이평작성시작(일), 일봉이평작성끝(일), 분봉이평작성시작(일), 분봉이평작성끝(일) 가질 것
 
 타이머 만들기
 실시간일 경우에 실시간 반환
 시뮬일 경우에 지정 시간에서 시작해서 잡리스트에 아무것도 없을 경우에 +3분할 것
-잡리스트에 타이머시간보다 이후의 잡이 있을 경우 순차적으로 실시 
+잡리스트에 타이머시간보다 이후의 잡이 있을 경우 순차적으로 실시
 
 개장일리스트 만들기
+	int형리스트를 만들고
+	파일로드
+	현재일을 설정하면 그날짜의 인덱스를 저장하고
+	전일, 다음일을 쉽게 가져올수 있도록한다
 
 잡리스트
 로드 아이템
@@ -80,6 +84,12 @@ https://dennisbot.tistory.com/16?category=637468
 로드 분봉
 겟분봉
 체크
+
+아이템 검색 기능
+	종목명 전방검색 리스트에 출력
+	타겟, 스테이터스 별로 검색 기능 넣을 것
+	아이템(코드로 검색시)이 없을 경우 api로 가져오는 기능
+
 
 시작이 눌리면 코드 입력으로부터 받은 코드로 아이템이 존재하는지 확인
 	없을 경우에 api로 가져온다(잡 등록)
@@ -234,6 +244,22 @@ array의 가장 뒤 부터 data를 등록하고 이미 등록된 레코드의 �
  String.IsNullOrEmpty();
  
  
+ panel1.Enabled = true;
+ 
+ 
+ -------------------
+ 
+     public static void main(String[] args) {
+        Calendar d = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        d.set(2019, Calendar.JANUARY, 1);
+        while (d.get(Calendar.YEAR) == 2019) {
+            if (d.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY && d.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
+                System.out.println(sdf.format(d.getTime()));
+            }
+            d.add(Calendar.DATE, 1);
+        }
+    }
  
  
  
