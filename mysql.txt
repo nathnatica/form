@@ -8,13 +8,14 @@ use testdb;
 
 drop table item;
 create table item (code varchar(10), name varchar(100), target varchar(1), status varchar(10), day_start_date int, day_end_date int, min_start_date int, min_end_date int,
-day_avg_start_date int, day_avg_end_date int, min_avg_start_date int, min_avg_end_date int, upd_date datetime, opt1 varchar(10), opt2 varchar(10), opt3 varchar(10), primary key (code));
+day_avg_start_date int, day_avg_end_date int, min_avg_start_date int, min_avg_end_date int, upd_date datetime, primary key (code));
 alter table item add index item_name(name);
 
 
-insert into item (code, name, target, status, day_start_date, day_end_date, upd_date, opt1, opt2, opt3) 
-values (@val1, @val2, @val3, @val4, @val5, @val6, now(), @val8, @val9, @val10)
-on duplicate key update target = @val3, status = @val4, day_start_date = @val5, day_end_date = @val6, upd_date = now(), opt1 = @val8, opt2 = @val9, opt3 = @val10
+insert into item (code, name, target, status, day_start_date, day_end_date, min_start_date, min_end_date, day_avg_start_date, day_avg_end_date, min_avg_start_date, min_avg_end_date, upd_date) 
+values (@val1, @val2, @val3, @val4, @val5, @val6, now(), @val8, @val9, @val10, @val11, @val12, @val13)
+on duplicate key update target = @val3, status = @val4, day_start_date = @val5, day_end_date = @val6, upd_date = now(), 
+min_start_date = @val8, min_end_date = @val9, day_avg_start_date = @val10, day_avg_end_date = @val11, min_avg_start_date = @val12, min_avg_end_date = @val13 
 
 insert into item (code, name, target, day_start_date, day_end_date, upd_date, opt1, opt2, opt3)
 values ('0001','code name','0',null,null,null,null,null,null);

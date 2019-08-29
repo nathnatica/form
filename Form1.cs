@@ -18,6 +18,8 @@ namespace WindowsFormsApp1
         ControlOrder order = new ControlOrder();
         ControlStock stock = new ControlStock();
 
+        OpenDays openDays;
+
         public Form1()
         {
             InitializeComponent();
@@ -66,6 +68,7 @@ namespace WindowsFormsApp1
             this.startDateTextBox.Text = Convert.ToString(20190814);
             this.endDateTextBox.Text = Convert.ToString(20190814);
 
+            openDays = new OpenDays();
 
         }
 
@@ -319,6 +322,21 @@ namespace WindowsFormsApp1
             }
         }
 
-    }
+        private void InsertBulkItemFromFile(object sender, EventArgs e)
+        {
+            List<Item> list = new List<Item>();
+            string[] lines = File.ReadAllLines(Path.Combine(Directory.GetCurrentDirectory(), "\\item.txt"));
+            foreach (string line in lines)
+            {
+                string[] sp = line.Split('\t');
+                Item item = new Item();
+                item.code = sp[0];
+                item.type = sp[1];
+                item.name = sp[2];
+                list.Add(item);
+            }
+            dao.InsertItemData(list, true);
+        }
 
+    }
 }

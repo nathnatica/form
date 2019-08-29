@@ -240,14 +240,13 @@ array의 가장 뒤 부터 data를 등록하고 이미 등록된 레코드의 �
 
 -------------------
  
- 
  String.IsNullOrEmpty();
  
+-------------------
  
  panel1.Enabled = true;
  
- 
- -------------------
+-------------------
  
      public static void main(String[] args) {
         Calendar d = Calendar.getInstance();
@@ -262,6 +261,14 @@ array의 가장 뒤 부터 data를 등록하고 이미 등록된 레코드의 �
     }
  
  
+-------------------
  
+ var path = Path.Combine(Directory.GetCurrentDirectory(), "\\fileName.txt");
  
- 
+-------------------
+
+
+
+
+
+

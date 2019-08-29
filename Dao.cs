@@ -69,7 +69,8 @@ namespace WindowsFormsApp1
             List<Item> array = new List<Item>();
             try
             {
-                string Query = "select code, name, target, day_start_date, day_end_date, upd_date, opt1, opt2, opt3 from item order by target asc, upd_date desc;";
+                string Query = "select code, name, target, status, day_start_date, day_end_date, min_start_date, min_end_date, day_avg_start_date, day_avg_end_date, min_avg_start_date, min_avg_end_date, upd_date, type " +
+                    "from item order by target asc, upd_date desc;";
                 MySqlConnection MyConn2 = GetConnection();
                 MySqlCommand cmd = new MySqlCommand(Query, MyConn2);
                 MySqlDataReader MyReader2;
@@ -82,13 +83,18 @@ namespace WindowsFormsApp1
                     entity.code = MyReader2.GetString(0);
                     entity.name = MyReader2.GetString(1);
                     entity.target = MyReader2.GetString(2);
-                    entity.dayStartDate = Util.GetNotNullInT(3, MyReader2);
-                    entity.dayEndDate = Util.GetNotNullInT(4, MyReader2);
-                    entity.updDate = Util.GetNotNullInT(5, MyReader2);
-                    entity.opt1 = Util.GetNotNullString(6, MyReader2);
-                    entity.opt2 = Util.GetNotNullString(7, MyReader2);
-                    entity.opt3 = Util.GetNotNullString(8, MyReader2);
+                    entity.status = MyReader2.GetString(3);
+                    entity.dayStartDate = Util.GetNotNullInT(4, MyReader2);
+                    entity.dayEndDate = Util.GetNotNullInT(5, MyReader2);
+                    entity.minStartDate = Util.GetNotNullInT(6, MyReader2);
+                    entity.minEndDate = Util.GetNotNullInT(7, MyReader2);
+                    entity.dayAvgStartDate = Util.GetNotNullInT(8, MyReader2);
+                    entity.dayAvgEndDate = Util.GetNotNullInT(9, MyReader2);
+                    entity.minAvgStartDate = Util.GetNotNullInT(10, MyReader2);
+                    entity.minAvgEndDate = Util.GetNotNullInT(11, MyReader2);
+                    entity.updDate = Util.GetNotNullInT(12, MyReader2);
                     entity.update = "UPDATE";
+                    entity.type = MyReader2.GetString(13);
                     array.Add(entity);
                 }
                 MyConn2.Close();
@@ -105,10 +111,10 @@ namespace WindowsFormsApp1
         {
             List<Item> list = new List<Item>();
             list.Add(item);
-            InsertItemData(list);
+            InsertItemData(list, false);
         }
 
-        public void InsertItemData(List<Item> array)
+        public void InsertItemData(List<Item> array, Boolean insertOnly)
         {
             try
             {
@@ -116,19 +122,30 @@ namespace WindowsFormsApp1
                 MyConn2.Open();
                 foreach (Item data in array)
                 {
-                    string Query = "insert into item (code, name, target, day_start_date, day_end_date, upd_date, opt1, opt2, opt3)" +
-                        " values (@val1, @val2, @val3, @val4, @val5, @val6, @val7, @val8, @val9)" +
-                        " on duplicate key update target = @val3, day_start_date = @val4, day_end_date = @val5, upd_date = @val6, opt1 = @val7, opt2 = @val8, opt3 = @val9";
+                    string Query = "insert into item (code, name, target, status, day_start_date, day_end_date, min_start_date, min_end_date, day_avg_start_date, day_avg_end_date, min_avg_start_date, min_avg_end_date, upd_date, type) " +
+                        "values (@val1, @val2, @val3, @val4, @val5, @val6, now(), @val8, @val9, @val10, @val11, @val12, @val13, @val14) ";
+                    if (insertOnly)
+                    {
+                        Query += "on duplicate key update upd_date = now();";
+                    } else
+                    {
+                        Query += "on duplicate key update target = @val3, status = @val4, day_start_date = @val5, day_end_date = @val6, upd_date = now(), " +
+                        "min_start_date = @val8, min_end_date = @val9, day_avg_start_date = @val10, day_avg_end_date = @val11, min_avg_start_date = @val12, min_avg_end_date = @val13, type = @val14;";
+                    }
                     MySqlCommand cmd = new MySqlCommand(Query, MyConn2);
                     cmd.Parameters.AddWithValue("@val1", data.code);
                     cmd.Parameters.AddWithValue("@val2", data.name);
                     cmd.Parameters.AddWithValue("@val3", data.target);
-                    cmd.Parameters.AddWithValue("@val4", data.dayStartDate);
-                    cmd.Parameters.AddWithValue("@val5", data.dayEndDate);
-                    cmd.Parameters.AddWithValue("@val6", data.updDate);
-                    cmd.Parameters.AddWithValue("@val7", data.opt1);
-                    cmd.Parameters.AddWithValue("@val8", data.opt2);
-                    cmd.Parameters.AddWithValue("@val9", data.opt3);
+                    cmd.Parameters.AddWithValue("@val4", data.status);
+                    cmd.Parameters.AddWithValue("@val5", data.dayStartDate);
+                    cmd.Parameters.AddWithValue("@val6", data.dayEndDate);
+                    cmd.Parameters.AddWithValue("@val8", data.minStartDate);
+                    cmd.Parameters.AddWithValue("@val9", data.minEndDate);
+                    cmd.Parameters.AddWithValue("@val10", data.dayAvgStartDate);
+                    cmd.Parameters.AddWithValue("@val11", data.dayAvgEndDate);
+                    cmd.Parameters.AddWithValue("@val12", data.minAvgStartDate);
+                    cmd.Parameters.AddWithValue("@val13", data.minAvgEndDate);
+                    cmd.Parameters.AddWithValue("@val14", data.type);
                     MySqlDataReader MyReader2;
                     MyReader2 = cmd.ExecuteReader();
                     MyReader2.Close();
