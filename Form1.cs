@@ -18,7 +18,13 @@ namespace WindowsFormsApp1
         ControlOrder order = new ControlOrder();
         ControlStock stock = new ControlStock();
 
-        OpenDays openDays;
+        OpenDays openDays = new OpenDays();
+
+        SortedDictionary<DateTime, Task> apiTasks = new SortedDictionary<DateTime, Task>();
+        SortedDictionary<DateTime, Task> tasks = new SortedDictionary<DateTime, Task>();
+
+        ApiCallTimer apiTaskTimer = new ApiCallTimer();
+        TaskTimer taskTimer = new TaskTimer();
 
         public Form1()
         {
@@ -38,7 +44,6 @@ namespace WindowsFormsApp1
             this.axKHOpenAPI1.OnEventConnect += account.axKHOpenAPI_OnEventConnect;
             this.accountComboBox.SelectedIndexChanged += account.accountComboBox_SelectedIndexChanged;
 
-            this.refresh.Click += control.ItemRefreshClick;
             this.itemGridView.CellContentClick += control.ItemGridView_CellContentClick;
 
             Util.GetDateNow(); // TODO 
@@ -46,11 +51,15 @@ namespace WindowsFormsApp1
             this.simulateRadioButton.CheckedChanged += control.SimulateRadioButton_CheckedChanged;
             this.realtimeRadioButton.CheckedChanged += control.RealtimeRadioButton_CheckedChanged;
 
+            this.inquireButton.Click += control.InquireButtonClick;
+
             // init control
             control.console = this.console;
             control.itemGridView = this.itemGridView;
             control.accountComboBox = this.accountComboBox;
             control.dao = this.dao;
+            control.codeTextBox = this.codeTextBox;
+            control.targetCheckBox = this.targetCheckBox;
 
             // init account
             account.axKHOpenAPI1 = this.axKHOpenAPI1;
@@ -68,8 +77,45 @@ namespace WindowsFormsApp1
             this.startDateTextBox.Text = Convert.ToString(20190814);
             this.endDateTextBox.Text = Convert.ToString(20190814);
 
-            openDays = new OpenDays();
+            this.startButton.Click += StartButtonClick;
 
+            apiTaskTimer.control = this.control;
+            apiTaskTimer.SetInterval(1);
+            apiTaskTimer.apiTasks = this.apiTasks;
+            apiTaskTimer.tasks = this.tasks;
+
+            taskTimer.control = this.control;
+            taskTimer.SetInterval(1);
+            taskTimer.apiTasks = this.apiTasks;
+            taskTimer.tasks = this.tasks;
+
+            apiTaskTimer.Start();
+            taskTimer.Start();
+        }
+
+        private void StartButtonClick(object sender, EventArgs e)
+        {
+            if (!control.IsRealtimeMode())
+            {
+                control.InquireButtonClick(null, null);
+                if (!String.IsNullOrEmpty(control.GetCode()) && (control.itemList == null || control.itemList.Count == 0)) // TODO or empty
+                {
+
+                    // TODO for loop for start date to end date
+                    OpenDays.SetToday(this.startDateTextBox.Text);
+
+                    Task t = new Task();
+                    t.type = Constants.TASK_TYPE_API_GET_ITEM;
+                    t.code = control.GetCode();
+                    apiTasks.Add(DateTime.Now, t);
+                } else
+                {
+                    Console.WriteLine(control.itemList.Count);
+                }
+            } else
+            {
+
+            }
         }
 
         private void ThreeAddClick(object sender, EventArgs e)

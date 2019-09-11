@@ -12,9 +12,13 @@ namespace WindowsFormsApp1
         public ListBox console { get; set; }
         public ComboBox accountComboBox { get; set; }
         public Dao dao { get; set; }
+
         public DataGridView itemGridView;
 
-        List<Item> itemList;
+        public TextBox codeTextBox;
+        public CheckBox targetCheckBox;
+
+        public List<Item> itemList;
 
         public void Print(string message)
         {
@@ -29,6 +33,7 @@ namespace WindowsFormsApp1
                 sb.Append(code != null ? " [" + code + "] " : " ");
                 sb.Append(message);
                 this.console.Items.Add(sb.ToString());
+
             }
             else
             {
@@ -61,12 +66,9 @@ namespace WindowsFormsApp1
         {
             return Constants.MODE_REALTIME == mode;
         }
-
-        public void ItemRefreshClick(object sender, EventArgs e)
+        public Boolean IsSimulateMode()
         {
-            itemList = dao.GetItemData();
-            itemGridView.DataSource = itemList;
-            Print("Refresh ItemGridView");
+            return Constants.MODE_SIMULATE == mode;
         }
 
         public void ItemGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -74,13 +76,39 @@ namespace WindowsFormsApp1
             var sendGrid = (DataGridView)sender;
             if (sendGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn && e.RowIndex >= 0)
             {
-                string targetValue = this.itemGridView.Rows[e.RowIndex].Cells[2].Value.ToString();
-                Item entity = itemList[e.RowIndex];
-                entity.target = targetValue;
-                dao.InsertItemData(entity);
-                Print("Updated item data with target = " + targetValue, entity.code);
-                ItemRefreshClick(null, null);
+                if (this.itemGridView.Rows[e.RowIndex].Cells[2].Value != null)
+                {
+                    string targetValue = this.itemGridView.Rows[e.RowIndex].Cells[2].Value.ToString();
+                    Item entity = itemList[e.RowIndex];
+                    entity.target = targetValue;
+                    dao.InsertItemData(entity);
+                    Print("Updated item data with target = " + targetValue, entity.code);
+                    InquireButtonClick(null, null);
+                }
             }
+        }
+
+        public void InquireButtonClick(object sender, EventArgs e)
+        {
+            if (!String.IsNullOrEmpty(codeTextBox.Text))
+            {
+                itemList = dao.GetItemData(codeTextBox.Text, false);
+                itemGridView.DataSource = itemList;
+                Print("Refresh ItemGridView");
+            }
+            else if (targetCheckBox.Checked == true)
+            {
+                itemList = dao.GetItemData(null, true);
+                itemGridView.DataSource = itemList;
+                Print("Refresh ItemGridView");
+            }
+
+            // TODO 새코드정보를 어떻게 등록할 것인지를 생각할것
+        }
+
+        public string GetCode()
+        {
+            return codeTextBox.Text;
         }
     }
 }

@@ -9,8 +9,8 @@ namespace WindowsFormsApp1
 {
     class OpenDays
     {
-        private int todayIdx;
-        private List<Int32> days = new List<Int32>();
+        private static int todayIdx;
+        private static List<Int32> days = new List<Int32>();
 
         public OpenDays()
         {
@@ -21,22 +21,27 @@ namespace WindowsFormsApp1
             }
         }
 
-        public void SetToday(string day)
+        public static void SetToday(string day)
         {
-            this.SetToday(Convert.ToInt32(day));
+            SetToday(Convert.ToInt32(day));
         }
 
-        public void SetToday(int day)
+        public static void SetToday(int day)
         {
             todayIdx = days.IndexOf(day);
         }
 
-        public int GetPrevDay(int offset)
+        public static int GetToday()
+        {
+            return days[todayIdx];
+        }
+
+        public static int GetPrevDay(int offset)
         {
             return days[todayIdx - offset];
         }
 
-        public int GetNextDay(int offset)
+        public static int GetNextDay(int offset)
         {
             return days[todayIdx + offset];
         }

@@ -64,15 +64,28 @@ namespace WindowsFormsApp1
             return threeArray;
         }
 
-        public List<Item> GetItemData()
+        public List<Item> GetItemData(string code, Boolean isTarget)
         {
             List<Item> array = new List<Item>();
             try
             {
                 string Query = "select code, name, target, status, day_start_date, day_end_date, min_start_date, min_end_date, day_avg_start_date, day_avg_end_date, min_avg_start_date, min_avg_end_date, upd_date, type " +
-                    "from item order by target asc, upd_date desc;";
+                    "from item ";
+                if (code != null)
+                {
+                    Query += " where name like '@val%'";
+                }
+                if (isTarget)
+                {
+                    Query += " where target = 'T'";
+                }
+                Query += " order by target asc, upd_date desc;";
                 MySqlConnection MyConn2 = GetConnection();
                 MySqlCommand cmd = new MySqlCommand(Query, MyConn2);
+                if (code != null)
+                {
+                    cmd.Parameters.AddWithValue("@val", code);
+                }
                 MySqlDataReader MyReader2;
                 MyConn2.Open();
                 MyReader2 = cmd.ExecuteReader();
